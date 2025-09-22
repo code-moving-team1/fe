@@ -4,24 +4,28 @@
   font-family: "Pretendard";
   src: url("/fonts/pretendard/Pretendard-Regular.woff2") format("woff2");
   font-style: normal;
+  font-weight: 400;
 }
 
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/pretendard/Pretendard-Medium.woff2") format("woff2");
   font-style: normal;
+  font-weight: 500;
 }
 
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/pretendard/Pretendard-SemiBold.woff2") format("woff2");
   font-style: normal;
+  font-weight: 600;
 }
 
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/pretendard/Pretendard-Bold.woff2") format("woff2");
   font-style: normal;
+  font-weight: 700;
 }
 
 body {
