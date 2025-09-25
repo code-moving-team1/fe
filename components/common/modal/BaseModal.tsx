@@ -22,6 +22,9 @@ interface BaseModalProps {
   showRouteInfo?: boolean;
   showTextArea?: boolean;
   confirmText?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onConfirm?: () => void;
 }
 
 export default function BaseModal({
@@ -38,6 +41,9 @@ export default function BaseModal({
   showRouteInfo = true,
   showTextArea = true,
   confirmText,
+  open,
+  onOpenChange,
+  onConfirm,
 }: BaseModalProps) {
   const [value, setValue] = useState("");
 
@@ -45,8 +51,10 @@ export default function BaseModal({
 
   return (
     <Dialog.Root
-      onOpenChange={(open) => {
-        if (!open) setValue("");
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) setValue("");
+        onOpenChange?.(nextOpen);
       }}
     >
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
@@ -55,8 +63,7 @@ export default function BaseModal({
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
 
         <Dialog.Content
-          className={`fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 
-            rounded-4xl bg-white p-6 shadow-lg flex flex-col gap-6 ${className || ""}`}
+          className={`fixed top-1/2 left-1/2 flex w-[400px] -translate-x-1/2 -translate-y-1/2 flex-col gap-6 rounded-4xl bg-white p-6 shadow-lg ${className || ""}`}
         >
           <div className="flex items-center justify-between">
             {title && (
@@ -67,13 +74,13 @@ export default function BaseModal({
                 className="text-gray-400 hover:text-gray-600"
                 aria-label="Close"
               >
-                <Cross2Icon className="w-5 h-5" />
+                <Cross2Icon className="h-5 w-5" />
               </button>
             </Dialog.Close>
           </div>
 
           {description && (
-            <Dialog.Description className="font-normal text-sm">
+            <Dialog.Description className="text-sm font-normal">
               {description}
             </Dialog.Description>
           )}
@@ -81,7 +88,7 @@ export default function BaseModal({
           {children}
 
           {showRouteInfo && (
-            <div className="flex justify-between items-start gap-6 text-xs">
+            <div className="flex items-start justify-between gap-6 text-xs">
               <CardRouteInfo from={departure || ""} to={destination || ""} />
               <CardDateInfo movingDate={moveDate || ""} />
             </div>
@@ -102,14 +109,14 @@ export default function BaseModal({
           <Dialog.Close asChild>
             <Buttons
               disabled={showTextArea ? !isValid : false}
-              className={`mt-4 px-4 py-2 rounded-lg w-full 
-            ${
-              showTextArea
-                ? isValid
-                  ? "bg-orange-400 text-white hover:bg-orange-500 cursor-pointer"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-orange-400 text-white hover:bg-orange-500 cursor-pointer"
-            }`}
+              className={`mt-4 w-full rounded-lg px-4 py-2 ${
+                showTextArea
+                  ? isValid
+                    ? "cursor-pointer bg-orange-400 text-white hover:bg-orange-500"
+                    : "cursor-not-allowed bg-gray-300 text-gray-500"
+                  : "cursor-pointer bg-orange-400 text-white hover:bg-orange-500"
+              }`}
+              onClick={() => onConfirm?.()}
             >
               {confirmText || "확인"}
             </Buttons>
@@ -119,17 +126,3 @@ export default function BaseModal({
     </Dialog.Root>
   );
 }
-
-// page.tsx 테스트 코드
-//  <div className="p-10">
-//       <BaseModal
-//         trigger={
-//           <button className="px-4 py-2 bg-orange-500 text-white rounded-lg">
-//             base modal
-//           </button>
-//         }
-//         title="Base Modal"
-//       >
-//         <p>이 모달에 추가해서 넣으면 됩니다</p>
-//       </BaseModal>
-//     </div>
