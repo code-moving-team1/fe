@@ -1,6 +1,8 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/Header";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Moving",
@@ -15,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <Header />
-        {children}
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

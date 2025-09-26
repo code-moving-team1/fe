@@ -4,16 +4,16 @@ import { customerGetMe, moverGetMe } from "@/lib/auth";
 import { useAuthStore } from "@/contexts/authStore";
 
 export const useMe = () => {
-  const { userType } = useAuthStore();
+  const { userType, isAuthenticated } = useAuthStore();
 
   return useQuery({
     queryKey: ["me", userType],
     queryFn: () => {
       if (userType === "customer") return customerGetMe();
       if (userType === "mover") return moverGetMe();
-      throw new Error("No user type selected");
+      throw new Error("No user type selected"); //@TODO 에러 정의
     },
-    enabled: !!userType, // userType 없으면 실행 안 함
-    retry: false,
+    enabled: isAuthenticated(),
+    retry: false, // 401은 인터셉터가 처리
   });
 };

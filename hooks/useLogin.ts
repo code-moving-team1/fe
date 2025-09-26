@@ -7,16 +7,15 @@ export const useLogin = (userType: "customer" | "mover") => {
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
 
-  const mutationFn =
-    userType === "customer"
-      ? customerSignIn
-      : moverSignIn;
+  const mutationFn = userType === "customer" ? customerSignIn : moverSignIn;
 
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       mutationFn(email, password),
-    onSuccess: () => {
-      setAuth(userType, true);
+    onSuccess: (data) => {
+      //로그인 성공 - Zustand 상태 업데이트
+      setAuth(userType);
+      // React Query 캐시 무효화 하고 다시 me api 호출
       queryClient.invalidateQueries({ queryKey: ["me", userType] });
     },
   });
