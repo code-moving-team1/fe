@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/Header";
 import Providers from "./providers";
+import HeaderWJ from "@/components/header/HeaderWJ";
 
 export const metadata: Metadata = {
   title: "Moving",
@@ -18,7 +19,8 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <Providers>
-          <Header />
+          {/* <Header /> */}
+          <HeaderWJ />
           {children}
         </Providers>
       </body>
