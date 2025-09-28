@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header/Header";
 import Providers from "./providers";
 import HeaderWJ from "@/components/header/HeaderWJ";
+import HeaderRefactor from "@/components/header/HeaderRefactor";
 
 export const metadata: Metadata = {
   title: "Moving",
@@ -19,8 +20,9 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <Providers>
-          {/* <Header /> */}
-          <HeaderWJ />
+          <Header />
+          {/* <HeaderWJ /> */}
+          <HeaderRefactor />
           {children}
         </Providers>
       </body>
