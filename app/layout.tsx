@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/Header";
 import Providers from "./providers";
+
 import HeaderWJ from "@/components/header/HeaderWJ";
 import HeaderRefactor from "@/components/header/HeaderRefactor";
 
@@ -21,8 +22,10 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
+
           {/* <HeaderWJ /> */}
           <HeaderRefactor />
+
           {children}
         </Providers>
       </body>
