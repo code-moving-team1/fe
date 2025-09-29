@@ -3,11 +3,16 @@
 
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function MoverLoginPage() {
   const [email, setEmail] = useState("testmover1@test.com");
   const [password, setPassword] = useState("12345678");
   const { mutate: login, isPending } = useLogin("mover");
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   return (
     <div className="p-6">
@@ -15,7 +20,14 @@ export default function MoverLoginPage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          login({ email, password });
+          login(
+            { email, password },
+            {
+              onSuccess: () => {
+                router.push(redirectTo);
+              },
+            },
+          );
         }}
         className="flex flex-col gap-2"
       >

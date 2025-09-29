@@ -20,6 +20,7 @@ export const useAuthStore = create<AuthState>()(
       userType: null,
       setAuth: (userType) => set({ userType }),
       logout: () => set({ userType: null }),
+      //로그아웃 시 랜딩페이지 지정
       isAuthenticated: () => !!get().userType,
     }),
     { name: "auth-store" },

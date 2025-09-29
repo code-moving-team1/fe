@@ -9,12 +9,12 @@ export type MenuItem = {
 export const menuConfig: Record<"guest" | "customer" | "mover", MenuItem[]> = {
   guest: [
     { href: "/search", label: "기사님 찾기" },
-    {
-      href: "/login/customer",
-      label: "고객 로그인",
-      className: "text-blue-600",
-    },
-    { href: "/login/mover", label: "기사 로그인", className: "text-blue-600" },
+    // {
+    //   href: "/login/customer",
+    //   label: "고객 로그인",
+    //   className: "text-blue-600",
+    // },
+    // { href: "/login/mover", label: "기사 로그인", className: "text-blue-600" },
   ],
   customer: [
     { href: "/estimate", label: "견적 요청" },
