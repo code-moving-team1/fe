@@ -1,5 +1,8 @@
+// components/header/NavMenu.tsx
 import Link from "next/link";
 import { menuConfig, type MenuItem } from "@/lib/config/header/headerConfigs";
+import Image from "next/image";
+import logo from "@/public/assets/logo.svg";
 
 interface Props {
   userType: "customer" | "mover" | null;
@@ -7,19 +10,25 @@ interface Props {
 }
 
 export default function NavMenu({ userType, isAuthenticated }: Props) {
-  // 로그인 여부에 따라 guest or customer/mover
+  // 로그인 여부에 따라 guest(비회원) or customer/mover
   const role = !isAuthenticated ? "guest" : (userType ?? "guest");
   const menus: MenuItem[] = menuConfig[role];
 
   return (
-    <ul className="text-md flex gap-6 font-bold text-black">
-      {menus.map(({ href, label, className }) => (
-        <li key={href}>
-          <Link href={href} className={className ?? ""}>
-            {label}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="flex items-center gap-8">
+      {/* 로고 */}
+      <Link href="/">
+        <Image src={logo} alt="무빙 로고" width={116} height={44} />
+      </Link>
+      <ul className="text-md flex gap-6 font-bold text-black">
+        {menus.map(({ href, label, className }) => (
+          <li key={href}>
+            <Link href={href} className={className ?? ""}>
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
