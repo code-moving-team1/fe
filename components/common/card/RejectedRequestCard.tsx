@@ -33,7 +33,7 @@ export default function RejectedRequestCard({
   chips = [],
 }: RejectedRequestCardProps) {
   return (
-    <Card className={`w-md space-y-5 relative ${className || ""}`}>
+    <Card className={`relative w-md space-y-5 ${className || ""}`}>
       <div className="space-y-3">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-3">
@@ -53,8 +53,7 @@ export default function RejectedRequestCard({
         <CardDateInfo movingDate={movingDate} />
       </div>
 
-      {/* 반려 오버레이 */}
-      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-xl text-white">
+      <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-black/50 text-white">
         <p className="text-lg font-semibold">반려된 요청이에요</p>
       </div>
     </Card>

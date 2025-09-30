@@ -11,10 +11,10 @@ interface CustomerEstimateCardProps {
   from: string;
   to: string;
   movingDate: string;
-  moveType: string;
   requestType: string;
   price: number;
   className?: string;
+  moveType: string;
   children?: React.ReactNode;
   chips?: (Omit<ServiceChipProps, "iconSrc"> & {
     label: string;
@@ -27,8 +27,8 @@ export default function CustomerEstimateCard({
   from,
   to,
   movingDate,
-  moveType,
   requestType,
+  moveType,
   price,
   className,
   children,
@@ -55,8 +55,8 @@ export default function CustomerEstimateCard({
         <CardDateInfo movingDate={movingDate} />
       </div>
 
-      <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-        <span className="font-bold text-sm">견적 금액</span>
+      <div className="flex items-center justify-between border-t border-gray-200 pt-3">
+        <span className="text-sm font-bold">견적 금액</span>
         <CardPrice amount={price} className="" showLabel={false} />
       </div>
 

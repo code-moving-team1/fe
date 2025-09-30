@@ -74,7 +74,10 @@ export default function TestPage() {
         to="남극"
         movingDate="2025년 11월 07일 (금)"
         requestTime="1시간 전"
-        moveType="소형이사"
+        chips={[
+          { label: "소형 이사", iconSrc: "/icons/ic_box.svg" },
+          { label: "지정 견적 요청", iconSrc: "/icons/ic_document.svg" },
+        ]}
         requestType="지정 견적 요청"
         className="mt-5 ml-8"
       />
@@ -93,10 +96,14 @@ export default function TestPage() {
         from="인천"
         to="부천"
         movingDate="2025년 09월 22일 (월)"
-        moveType="소형이사"
+        chips={[
+          { label: "소형 이사", iconSrc: "/icons/ic_box.svg" },
+          { label: "지정 견적 요청", iconSrc: "/icons/ic_document.svg" },
+        ]}
         requestType="지정 견적 요청"
         price={180000}
         className="mt-4 ml-8"
+        moveType={""}
       />
 
       <CompletedMoverCard

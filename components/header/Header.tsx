@@ -78,6 +78,11 @@ export default function Header() {
                 <li>
                   <Link href="/myEstimates">내 견적 관리</Link>
                 </li>
+                <li>
+                  <Link href="/moverRequest" className="text-red-500">
+                    이사 목록 보기
+                  </Link>
+                </li>
               </>
             )}
           </ul>

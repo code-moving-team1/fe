@@ -14,7 +14,6 @@ interface ReceivedRequestCardProps {
   to: string;
   movingDate: string;
   requestTime: string;
-  moveType: string;
   requestType: string;
   className?: string;
   chips?: (Omit<ServiceChipProps, "iconSrc"> & {
@@ -29,7 +28,6 @@ export default function ReceivedRequestCard({
   to,
   movingDate,
   requestTime,
-  moveType,
   requestType,
   className,
   chips = [],

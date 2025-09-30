@@ -33,13 +33,13 @@ export default function CompletedMoveCard({
       price={price}
       className={`relative ${className || ""}`}
     >
-      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-xl text-white space-y-3">
+      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 rounded-xl bg-black/50 text-white">
         <p className="text-lg font-semibold">이사 완료된 견적이에요</p>
         <Buttons
           variant="outline"
           size="figma"
           state="active"
-          className="px-4 py-2 border border-red-400 text-red-500 rounded-lg bg-white"
+          className="rounded-lg border border-red-400 bg-white px-4 py-2 text-red-500"
         >
           견적 상세보기
         </Buttons>
