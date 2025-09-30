@@ -4,18 +4,18 @@ import {
   profileConfig,
   type MenuItem,
 } from "@/lib/config/header/headerConfigs";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function ProfileDropdown({
   userType,
   me,
-  logout,
 }: {
   userType: "customer" | "mover" | null;
   me: any;
-  logout: () => void;
 }) {
   if (!userType) return null;
 
+  const { mutate: logout } = useLogout();
   const menus: MenuItem[] = profileConfig[userType];
 
   return (
@@ -38,7 +38,7 @@ export default function ProfileDropdown({
       </ul>
 
       <button
-        onClick={logout}
+        onClick={() => logout()}
         className="w-full cursor-pointer border-t border-gray-100 px-4 py-2 text-center text-sm text-gray-400"
       >
         로그아웃
