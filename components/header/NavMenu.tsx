@@ -3,14 +3,15 @@ import Link from "next/link";
 import { menuConfig, type MenuItem } from "@/lib/config/header/headerConfigs";
 import Image from "next/image";
 import logo from "@/public/assets/logo.svg";
+import { MeResponse } from "@/types/auth";
 
 interface Props {
-  me: any | undefined; // @TODO 나중에 정확한 타입으로 교체
+  me?: MeResponse;
 }
 
 export default function NavMenu({ me }: Props) {
   // 로그인 여부에 따라 guest(비회원) or customer/mover
-  const role = me ? (me.career ? "mover" : "customer") : "guest";
+  const role = me ? ("career" in me ? "mover" : "customer") : "guest";
   const menus: MenuItem[] = menuConfig[role];
 
   return (

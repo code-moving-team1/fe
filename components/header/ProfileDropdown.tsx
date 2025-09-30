@@ -5,13 +5,14 @@ import {
   type MenuItem,
 } from "@/lib/config/header/headerConfigs";
 import { useLogout } from "@/hooks/useLogout";
+import { MeResponse } from "@/types/auth";
 
 export default function ProfileDropdown({
   userType,
   me,
 }: {
   userType: "customer" | "mover" | null;
-  me: any;
+  me: MeResponse;
 }) {
   if (!userType) return null;
 
