@@ -141,7 +141,7 @@ export default function MoverRequestPage() {
         setRequests(moveRequests);
 
         const quoteRes = await api.get(`/quote/mover/${moverId}`);
-        const myQuotes = quoteRes.data; // [{ id, moveRequestId, price, ... }]
+        const myQuotes = quoteRes.data;
         const myQuotedRequestIds = myQuotes.map((q: any) => q.moveRequestId);
 
         setQuotedIds(myQuotedRequestIds);
@@ -173,7 +173,7 @@ export default function MoverRequestPage() {
   };
 
   return (
-    <main className="mx-auto max-w-[894px] bg-gray-50 p-8">
+    <main className="mx-auto max-w-[894px] p-8">
       <h1 className="mb-6 text-2xl font-bold">일반 이사 요청</h1>
       <div className="mb-6">
         <FilterBar onFilterChange={setFilters} />
