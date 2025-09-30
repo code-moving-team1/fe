@@ -3,9 +3,10 @@ import Image from "next/image";
 import ProfileDropdown from "./ProfileDropdown";
 import alarmIcon from "@/public/icons/ic_alarm.svg";
 import profileIcon from "@/public/icons/ic_profile.svg";
+import { MeResponse } from "@/types/auth";
 
 interface Props {
-  me: any | undefined;
+  me?: MeResponse;
   open: boolean;
   setOpen: (v: boolean) => void;
 }
@@ -23,7 +24,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
     );
   }
 
-  const userType = me.career ? "mover" : "customer";
+  const userType = "career" in me ? "mover" : "customer";
 
   return (
     <div className="flex items-center gap-6">
