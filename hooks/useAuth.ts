@@ -2,11 +2,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { customerGetMe, moverGetMe } from "@/lib/auth";
 import { useAuthStore } from "@/contexts/authStore";
+import { MeResponse } from "@/types/auth";
 
 export const useMe = () => {
   const { userType, isAuthenticated } = useAuthStore();
 
-  return useQuery({
+  return useQuery<MeResponse>({
     queryKey: ["me", userType],
     queryFn: () => {
       if (userType === "customer") return customerGetMe();

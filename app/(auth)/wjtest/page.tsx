@@ -22,7 +22,7 @@ export default function WjTestPage() {
           </button>
         }
         customerName="테스트 고객"
-        moveRequestId={13} // ✅ 실제 테스트할 move-request id 넣기
+        moveRequestId={16} // ✅ 실제 테스트할 move-request id 넣기
         departure="서울"
         destination="부산"
         moveDate="2025-10-01"

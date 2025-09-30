@@ -76,16 +76,16 @@ export default function SendEstimateModal({
         )}
         <CardHeader customerName={customerName} className="text-lg" />
         <textarea
-          className="border p-2 w-full rounded"
+          className="w-full rounded border p-2"
           placeholder="코멘트를 입력해주세요 (최소 10자)"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
+          // 우리 텍스트Area 컴포넌트로 변경예정
         />
       </div>
     </BaseModal>
   );
 }
-
 
 // "use client";
 

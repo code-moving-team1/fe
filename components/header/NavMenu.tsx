@@ -5,13 +5,12 @@ import Image from "next/image";
 import logo from "@/public/assets/logo.svg";
 
 interface Props {
-  userType: "customer" | "mover" | null;
-  isAuthenticated: boolean;
+  me: any | undefined; // @TODO 나중에 정확한 타입으로 교체
 }
 
-export default function NavMenu({ userType, isAuthenticated }: Props) {
+export default function NavMenu({ me }: Props) {
   // 로그인 여부에 따라 guest(비회원) or customer/mover
-  const role = !isAuthenticated ? "guest" : (userType ?? "guest");
+  const role = me ? (me.career ? "mover" : "customer") : "guest";
   const menus: MenuItem[] = menuConfig[role];
 
   return (
