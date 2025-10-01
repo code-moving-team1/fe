@@ -5,22 +5,31 @@ import { MoveRequestFilter } from "@/lib/api/moveRequest";
 import Image from "next/image";
 
 interface FilterBarProps {
+  filters: MoveRequestFilter;
+  selectedLabels: {
+    from: string;
+    to: string;
+    service: string;
+    sort: string;
+  };
   onFilterChange: (filters: MoveRequestFilter) => void;
+  onLabelChange: (labels: {
+    from: string;
+    to: string;
+    service: string;
+    sort: string;
+  }) => void;
 }
 
-export default function FilterBar({ onFilterChange }: FilterBarProps) {
-  const [filters, setFilters] = useState<MoveRequestFilter>({
-    page: 1,
-    pageSize: 10,
-  });
+export default function FilterBar({
+  filters,
+  selectedLabels,
+  onFilterChange,
+  onLabelChange,
+}: FilterBarProps) {
   const [open, setOpen] = useState<"from" | "to" | "service" | "sort" | null>(
     null,
   );
-
-  const [selectedFromLabel, setSelectedFromLabel] = useState("출발 지역");
-  const [selectedToLabel, setSelectedToLabel] = useState("도착 지역");
-  const [selectedServiceLabel, setSelectedServiceLabel] = useState("서비스");
-  const [selectedSortLabel, setSelectedSortLabel] = useState("정렬");
 
   const REGIONS = [
     "전체",
@@ -49,10 +58,16 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
     { label: "등록 최신 순", field: "createdAt", order: "desc" },
   ];
 
-  const handleSelect = (key: keyof MoveRequestFilter, value: any) => {
+  const handleSelect = (
+    key: keyof MoveRequestFilter,
+    value: any,
+    labelKey: keyof typeof selectedLabels,
+    labelValue: string,
+  ) => {
     const newFilters = { ...filters, [key]: value, page: 1 };
-    setFilters(newFilters);
     onFilterChange(newFilters);
+    onLabelChange({ ...selectedLabels, [labelKey]: labelValue });
+    setOpen(null);
   };
 
   const getButtonClass = (selectedLabel: string, openKey: string) => {
@@ -83,14 +98,14 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
   );
 
   return (
-    <div className="relative z-50 flex w-full items-center justify-between">
+    <div className="relative flex w-full items-center justify-between">
       <div className="flex gap-3">
         <div className="relative">
           <button
             onClick={() => setOpen(open === "from" ? null : "from")}
-            className={getButtonClass(selectedFromLabel, "from")}
+            className={getButtonClass(selectedLabels.from, "from")}
           >
-            {selectedFromLabel}
+            {selectedLabels.from}
             <ChevronIcon isOpen={open === "from"} />
           </button>
           {open === "from" && (
@@ -99,16 +114,16 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
                 {REGIONS.map((region) => (
                   <li
                     key={region}
-                    onClick={() => {
-                      setSelectedFromLabel(region);
+                    onClick={() =>
                       handleSelect(
                         "departureRegions",
                         region === "전체" ? [] : [region],
-                      );
-                      setOpen(null);
-                    }}
+                        "from",
+                        region,
+                      )
+                    }
                     className={`cursor-pointer rounded-md px-3 py-2 text-sm hover:bg-gray-100 ${
-                      selectedFromLabel === region
+                      selectedLabels.from === region
                         ? "bg-red-50 text-red-500"
                         : ""
                     }`}
@@ -123,9 +138,9 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         <div className="relative">
           <button
             onClick={() => setOpen(open === "to" ? null : "to")}
-            className={getButtonClass(selectedToLabel, "to")}
+            className={getButtonClass(selectedLabels.to, "to")}
           >
-            {selectedToLabel}
+            {selectedLabels.to}
             <ChevronIcon isOpen={open === "to"} />
           </button>
           {open === "to" && (
@@ -134,16 +149,18 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
                 {REGIONS.map((region) => (
                   <li
                     key={region}
-                    onClick={() => {
-                      setSelectedToLabel(region);
+                    onClick={() =>
                       handleSelect(
                         "destinationRegions",
                         region === "전체" ? [] : [region],
-                      );
-                      setOpen(null);
-                    }}
+                        "to",
+                        region,
+                      )
+                    }
                     className={`cursor-pointer rounded-md px-3 py-2 text-sm hover:bg-gray-100 ${
-                      selectedToLabel === region ? "bg-red-50 text-red-500" : ""
+                      selectedLabels.to === region
+                        ? "bg-red-50 text-red-500"
+                        : ""
                     }`}
                   >
                     {region}
@@ -157,9 +174,9 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         <div className="relative">
           <button
             onClick={() => setOpen(open === "service" ? null : "service")}
-            className={getButtonClass(selectedServiceLabel, "service")}
+            className={getButtonClass(selectedLabels.service, "service")}
           >
-            {selectedServiceLabel}
+            {selectedLabels.service}
             <ChevronIcon isOpen={open === "service"} />
           </button>
           {open === "service" && (
@@ -168,8 +185,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
                 {services.map((service) => (
                   <li
                     key={service}
-                    onClick={() => {
-                      setSelectedServiceLabel(service);
+                    onClick={() =>
                       handleSelect(
                         "serviceTypes",
                         service === "전체"
@@ -181,11 +197,12 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
                                   ? "FAMILY"
                                   : "OFFICE",
                             ],
-                      );
-                      setOpen(null);
-                    }}
+                        "service",
+                        service,
+                      )
+                    }
                     className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                      selectedServiceLabel === service
+                      selectedLabels.service === service
                         ? "bg-red-50 text-red-500"
                         : ""
                     }`}
@@ -202,9 +219,9 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
       <div className="relative">
         <button
           onClick={() => setOpen(open === "sort" ? null : "sort")}
-          className={getButtonClass(selectedSortLabel, "sort")}
+          className={getButtonClass(selectedLabels.sort, "sort")}
         >
-          {selectedSortLabel}
+          {selectedLabels.sort}
           <ChevronIcon isOpen={open === "sort"} />
         </button>
         {open === "sort" && (
@@ -213,16 +230,16 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
               {sorts.map((sort) => (
                 <li
                   key={sort.label}
-                  onClick={() => {
-                    setSelectedSortLabel(sort.label);
-                    handleSelect("sort", {
-                      field: sort.field,
-                      order: sort.order,
-                    });
-                    setOpen(null);
-                  }}
+                  onClick={() =>
+                    handleSelect(
+                      "sort",
+                      { field: sort.field, order: sort.order },
+                      "sort",
+                      sort.label,
+                    )
+                  }
                   className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                    selectedSortLabel === sort.label
+                    selectedLabels.sort === sort.label
                       ? "bg-red-50 text-red-500"
                       : ""
                   }`}

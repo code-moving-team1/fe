@@ -37,6 +37,7 @@ export default function SendEstimateModal({
 
   return (
     <BaseModal
+      className="z-100"
       trigger={trigger}
       title="견적 보내기"
       departure={departure}

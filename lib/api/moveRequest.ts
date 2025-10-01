@@ -2,7 +2,6 @@
 import api from "./axiosClient";
 
 export interface MoveRequestItem {
-  // 추가
   destination: string;
   departure: string;
   id: number;
