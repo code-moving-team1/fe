@@ -42,8 +42,6 @@ export default async function RootLayout({
       <body>
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            {/* 기존 성근님 헤더 */}
-            {/* <Header /> */}
             <HeaderRefactor />
             {children}
           </HydrationBoundary>

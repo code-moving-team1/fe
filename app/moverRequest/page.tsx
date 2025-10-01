@@ -21,7 +21,7 @@ export default function MoverRequestPage() {
     page: 1,
     pageSize: 10,
   });
-  const [quotedIds, setQuotedIds] = useState<number[]>([]);
+  // const [quotedIds, setQuotedIds] = useState<number[]>([]);
 
   // const quoteRes = await api.get(`/quote/mover/${moverId}`);
   // const myQuotedRequestIds = quoteRes.data.map(
@@ -136,9 +136,27 @@ export default function MoverRequestPage() {
                   iconSrc: "/icons/ic_moving.svg",
                 },
               ]}
-              isQuoted={quotedIds.includes(req.id)}
+              // isQuoted={quotedIds.includes(req.id)}
               action={
-                !quotedIds.includes(req.id) && (
+                req.myQuote ? (
+                  req.myQuote.status === "PENDING" ? (
+                    <div className="rounded border border-yellow-400 bg-yellow-50 px-4 py-2 font-semibold text-yellow-600">
+                      고객 확인 중
+                    </div>
+                  ) : req.myQuote.status === "REJECTED" ? (
+                    <div className="rounded border border-red-400 bg-red-50 px-4 py-2 font-semibold text-red-600">
+                      다른 기사 선택됨
+                    </div>
+                  ) : req.myQuote.status === "ACCEPTED" ? (
+                    <div className="rounded border border-green-400 bg-green-50 px-4 py-2 font-semibold text-green-600">
+                      채택됨 🎉
+                    </div>
+                  ) : req.myQuote.status === "EXPIRED" ? (
+                    <div className="rounded border border-gray-400 bg-gray-100 px-4 py-2 font-semibold text-gray-600">
+                      만료됨
+                    </div>
+                  ) : null
+                ) : (
                   <SendEstimateModal
                     trigger={
                       <button className="rounded bg-orange-500 px-4 py-2 text-white">

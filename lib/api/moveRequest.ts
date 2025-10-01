@@ -12,6 +12,13 @@ export interface MoveRequestItem {
   moveDate: string;
   serviceType: string;
   status: string;
+  myQuote?: {
+    id: number;
+    price: number;
+    comment: string;
+    status: "PENDING" | "ACCEPTED" | "REJECTED"|"EXPIRED";
+    type: "NORMAL" | "DIRECT";
+  } | null;
 }
 
 export interface MoveRequestResponse {
