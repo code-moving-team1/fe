@@ -1,6 +1,7 @@
 import { useEstimateStore } from "@/store/estimateStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BaseModal from "./BaseModal";
+import Image from "next/image";
 
 interface AddressModalProps {
   type: "departure" | "destination";
@@ -39,6 +40,83 @@ export default function AddressModal({
   const [results, setResults] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("");
+
+  const handleCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      alert("현재 위치를 사용할 수 없습니다.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        const res = await fetch(
+          `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`,
+          {
+            headers: {
+              Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_API_KEY}`,
+            },
+          },
+        );
+        const data = await res.json();
+        const addressInfo = data.documents[0]?.address;
+
+        if (!addressInfo) {
+          alert("현재 위치를 찾을 수 없습니다.");
+          return;
+        }
+
+        const region1 = addressInfo.region_1depth_name
+          ?.replace("특별시", "")
+          ?.replace("광역시", "")
+          ?.replace("도", "");
+        const region2 = addressInfo.region_2depth_name;
+        // 주석 처리 한 부분 나중에 전체주소 나오게 바꾸기
+        // const region3 = addressInfo.region_3depth_name;
+        // const mainNo = addressInfo.main_address_no ?? "";
+        // const subNo = addressInfo.sub_address_no
+        //   ? `-${addressInfo.sub_address_no}`
+        //   : "";
+        // const fullAddress = `${region1} ${region2} ${region3} ${mainNo}${subNo}`;
+
+        const shortAddress = `${region1} ${region2}`;
+        const regionFinal = regionMap[region1] || "서울";
+
+        setQuery(shortAddress);
+        setSelectedAddress(shortAddress);
+        // setSelectedAddress(fullAddress);
+        setSelectedRegion(regionFinal);
+        setResults([]);
+      },
+      (err) => {
+        console.error(err);
+        alert("현재 위치를 불러올 수 없습니다.");
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      const res = await fetch(
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`,
+        {
+          headers: {
+            Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_API_KEY}`,
+          },
+        },
+      );
+      const data = await res.json();
+      setResults(data.documents || []);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const handleSearch = async (value: string) => {
     setQuery(value);
@@ -102,17 +180,30 @@ export default function AddressModal({
       trigger={undefined}
       onConfirm={handleConfirm}
     >
-      <input
-        type="text"
-        value={selectedAddress || query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setSelectedAddress("");
-          handleSearch(e.target.value);
-        }}
-        placeholder="주소를 입력해 주세요"
-        className="mb-3 w-full rounded border px-3 py-3"
-      />
+      <div className="relative mb-3">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setSelectedAddress("");
+          }}
+          placeholder="주소를 입력해 주세요"
+          className="mb-3 w-full rounded border px-3 py-3"
+        />
+        <button
+          type="button"
+          onClick={handleCurrentLocation}
+          className="absolute top-[40%] right-2 -translate-y-1/2 cursor-pointer"
+        >
+          <Image
+            src="/icons/ic_my_location.svg"
+            alt="현재 위치"
+            width={30}
+            height={30}
+          />
+        </button>
+      </div>
 
       <ul className="max-h-60 space-y-3 overflow-y-auto">
         {results.map((item, idx) => {

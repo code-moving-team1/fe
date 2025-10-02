@@ -14,6 +14,7 @@ interface EstimateState {
   setDestination: (destination: string, region: string) => void;
   setMoveType: (type: string) => void;
   setHasActiveEstimate: (value: boolean) => void;
+  reset: () => void;
 }
 
 export const useEstimateStore = create<EstimateState>((set) => ({
@@ -31,4 +32,15 @@ export const useEstimateStore = create<EstimateState>((set) => ({
     set({ destination, destinationRegion: region }),
   setMoveType: (type) => set({ moveType: type }),
   setHasActiveEstimate: (value) => set({ hasActiveEstimate: value }),
+
+  reset: () =>
+    set({
+      date: null,
+      departure: null,
+      departureRegion: null,
+      destination: null,
+      destinationRegion: null,
+      moveType: null,
+      hasActiveEstimate: false,
+    }),
 }));

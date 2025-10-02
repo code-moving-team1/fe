@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useEstimateStore } from "@/store/estimateStore";
 import Image from "next/image";
@@ -8,6 +8,8 @@ import Image from "next/image";
 export default function Calendar() {
   const { date, setDate } = useEstimateStore();
   const [open, setOpen] = useState(false);
+
+  const today = dayjs().startOf("day");
 
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const [currentMonth, setCurrentMonth] = useState(dayjs().month());
@@ -17,13 +19,15 @@ export default function Calendar() {
   ).daysInMonth();
 
   const handleDateClick = (day: number) => {
-    const selected = dayjs(`${currentYear}-${currentMonth + 1}-${day}`).format(
-      "YYYY-MM-DD",
-    );
-    setDate(selected);
+    const selected = dayjs(`${currentYear}-${currentMonth + 1}-${day}`);
+    if (selected.isBefore(today)) return;
+    setDate(selected.format("YYYY-MM-DD"));
   };
 
   const handleConfirm = () => {
+    if (!date) {
+      setDate(today.format("YYYY-MM-DD"));
+    }
     setOpen(false);
   };
 
@@ -72,60 +76,68 @@ export default function Calendar() {
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-2 w-80 rounded-lg border bg-white p-4 shadow-lg">
-          <div className="mb-2 flex items-center justify-between">
-            <button type="button" onClick={handlePrevMonth} className="px-2">
-              ◀
+        <>
+          <div className="fixed inset-0 z-0" onClick={() => setOpen(false)} />
+          <div className="absolute z-10 mt-2 w-80 rounded-lg border bg-white p-4 shadow-lg">
+            <div className="mb-2 flex items-center justify-between">
+              <button type="button" onClick={handlePrevMonth} className="px-2">
+                ◀
+              </button>
+              <p className="font-semibold">
+                {currentYear}.{String(currentMonth + 1).padStart(2, "0")}
+              </p>
+              <button type="button" onClick={handleNextMonth} className="px-2">
+                ▶
+              </button>
+            </div>
+
+            <div className="mb-1 grid grid-cols-7 text-center text-sm font-medium text-gray-500">
+              {weekDays.map((day) => (
+                <div key={day}>{day}</div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-2 text-center">
+              {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+                <div key={`empty-${i}`} />
+              ))}
+
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const day = i + 1;
+                const current = dayjs(
+                  `${currentYear}-${currentMonth + 1}-${day}`,
+                );
+                const formatted = dayjs(
+                  `${currentYear}-${currentMonth + 1}-${day}`,
+                ).format("YYYY-MM-DD");
+
+                const isPast = current.isBefore(today);
+                const isToday = current.isSame(today);
+                const isSelected = date === formatted;
+
+                return (
+                  <button
+                    type="button"
+                    key={day}
+                    onClick={() => handleDateClick(day)}
+                    disabled={isPast}
+                    className={`rounded p-2 transition-colors ${isSelected ? "bg-red-500 text-white" : ""} ${isToday && !isSelected ? "border border-red-400" : ""} ${isPast ? "cursor-not-allowed text-gray-300" : "hover:bg-gray-100"} `}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="mt-4 w-full rounded-lg bg-red-500 py-2 text-white hover:bg-red-600"
+            >
+              선택완료
             </button>
-            <p className="font-semibold">
-              {currentYear}.{String(currentMonth + 1).padStart(2, "0")}
-            </p>
-            <button type="button" onClick={handleNextMonth} className="px-2">
-              ▶
-            </button>
           </div>
-
-          <div className="mb-1 grid grid-cols-7 text-center text-sm font-medium text-gray-500">
-            {weekDays.map((day) => (
-              <div key={day}>{day}</div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-7 gap-2 text-center">
-            {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-              <div key={`empty-${i}`} />
-            ))}
-
-            {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day = i + 1;
-              const formatted = dayjs(
-                `${currentYear}-${currentMonth + 1}-${day}`,
-              ).format("YYYY-MM-DD");
-              return (
-                <button
-                  type="button"
-                  key={day}
-                  onClick={() => handleDateClick(day)}
-                  className={`rounded p-2 ${
-                    date === formatted
-                      ? "bg-red-500 text-white"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  {day}
-                </button>
-              );
-            })}
-          </div>
-
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="mt-4 w-full rounded-lg bg-red-500 py-2 text-white hover:bg-red-600"
-          >
-            선택완료
-          </button>
-        </div>
+        </>
       )}
     </div>
   );

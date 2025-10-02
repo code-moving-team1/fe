@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useEstimateStore } from "@/store/estimateStore";
 import AddressModal from "@/components/common/modal/AddressModal";
 import Calendar from "@/components/estimate/Calendar";
@@ -9,6 +10,9 @@ import { Buttons } from "@/components/common/button";
 import api from "@/lib/api/axiosClient";
 
 export default function EstimateForm() {
+  const router = useRouter();
+
+  const { reset } = useEstimateStore();
   const {
     date,
     departure,
@@ -54,7 +58,12 @@ export default function EstimateForm() {
     try {
       const res = await api.post("/move-requests", payload);
       console.log("이사 요청 성공:", res.data);
+
       alert("이사 요청이 완료되었습니다!");
+      reset();
+      setTimeout(() => {
+        router.push("/myEstimates");
+      }, 1000);
     } catch (err: any) {
       console.error("이사 요청 실패:", err.response?.data || err);
       alert("이사 요청에 실패했습니다. 다시 시도해주세요.");
