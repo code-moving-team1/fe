@@ -13,52 +13,7 @@ export default function SingUpPage() {
     <div className=" flex flex-row gap-[8px] mx-auto text-[20px] w-[300px]">
     <p>기사님이신가요?</p> <a className="font-semibold underline text-[#F9502E]">기사님 전용 페이지</a>
     </div>
-</div>
-{/* <div className=" flex flex-col lg:mx-auto max-w-[740px] gap-[24px] " >
-    <form  className=" flex flex-col max-w-[640px] gap-[56px] justify-center " >
-        
-        <div className="flex flex-col gap-[32px] max-w-[640px]">
-            <div className=" flex flex-col gap-[16px] items-start ">
-        <label className="text-[20px]">이름</label>
-        <input id="username" type="text" placeholder=" 성함을 입력해 주세요" className="
-         lg:w-[640px] md:w-[540px] min-w-[327px] border-1  border-[#E6E6E6] rounded-[16px] p-[14px] text-[16px]
-        focus:outline-none focus:border-[#F9502E] " />
-        </div>
-
-        <div className=" flex flex-col gap-[16px] items-start max-w-[640px] ">
-        <label className="text-[20px]">이메일</label>
-        <input id="email" type="email" placeholder=" 이메일을 입력해 주세요 " className="
-        lg:w-[640px] md:w-[540px] min-w-[327px] border-1  border-[#E6E6E6] rounded-[16px] p-[14px] focus:outline-none focus:border-[#F9502E]" />
-        </div>
-
-        <div className=" flex flex-col gap-[16px] items-start max-w-[640px] ">
-        <label className="text-[20px]">전화번호</label>
-        <input id="phone" type="tel" placeholder=" 전화번호를 입력해 주세요 " className="
-      lg:w-[640px] md:w-[540px] min-w-[327px] border-1  border-[#E6E6E6] rounded-[16px] p-[14px] focus:outline-none focus:border-[#F9502E]" />
-        </div>
-
-        <div className=" flex flex-col gap-[16px] items-start max-w-[640px] ">
-       <label className="text-[20px]">비밀번호</label>
-        <input id="password" type="password" placeholder=" 비밀번호를 입력해 주세요 " className="
-       lg:w-[640px] md:w-[540px] min-w-[327px] border-1  border-[#E6E6E6] rounded-[16px] p-[14px] focus:outline-none focus:border-[#F9502E]" />
-        </div>
-
-        <div className=" flex flex-col gap-[16px] items-start max-w-[640px] ">
-        <label className="text-[20px]">비밀번호 확인</label>
-        <input id="confirmPassword" type="password" placeholder=" 비밀번호를 다시 한 번 입력해 주세요 " className="
-       lg:w-[640px] md:w-[540px] min-w-[327px] border-1  border-[#E6E6E6] rounded-[16px] p-[14px] focus:outline-none focus:border-[#F9502E]" />
-        </div>
-
-        </div>
-        
-        <button type="submit" className="bg-[#D9D9D9] cursor-pointer lg:w-[640px] md:w-[540px] sm:w-[327px] min-w-[327px] rounded-[5px] p-[14px] font-semibold text-[#FFFFFF] ">시작하기</button> 
-
-    </form>
-
-    <div className="flex flex-row gap-[8px] mx-auto text-[20px]">
-         <p>이미 무빙 회원이신가요?</p><a className="font-semibold underline text-[#F9502E]">로그인</a> </div>
-        </div> */}
-
+</div> 
         <div className="w-full max-w-[640px] gap-[24px] mx-auto">
   <form className="flex flex-col gap-[56px] mx-auto ">
     <div className=" w-full flex flex-col gap-[32px] mx-auto">
