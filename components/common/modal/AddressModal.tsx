@@ -9,6 +9,25 @@ interface AddressModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const regionMap: Record<string, string> = {
+  서울: "서울",
+  경기: "경기",
+  인천: "인천",
+  부산: "부산",
+  대전: "대전",
+  대구: "대구",
+  광주: "광주",
+  울산: "울산",
+  강원: "강원",
+  충북: "충북",
+  충남: "충남",
+  전북: "전북",
+  전남: "전남",
+  경북: "경북",
+  경남: "경남",
+  제주: "제주",
+  세종: "세종",
+};
 export default function AddressModal({
   type,
   onClose,
@@ -19,6 +38,7 @@ export default function AddressModal({
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
 
   const handleSearch = async (value: string) => {
     setQuery(value);
@@ -36,10 +56,37 @@ export default function AddressModal({
     setResults(data.documents || []);
   };
 
+  const handleSelect = (item: any) => {
+    const road = item.road_address?.address_name;
+    const building = item.road_address?.building_name;
+    const jibun = item.address?.address_name;
+    const fullAddress = building ? `${road} (${building})` : road || jibun;
+
+    const regionKorean =
+      item.address?.region_1depth_name
+        ?.replace("특별시", "")
+        ?.replace("광역시", "")
+        ?.replace("도", "") || "서울";
+
+    const regionFinal = regionMap[regionKorean] || "서울";
+
+    console.log("선택된 지역:", {
+      fullAddress,
+      regionKorean,
+    });
+
+    setSelectedAddress(fullAddress);
+    setSelectedRegion(regionFinal);
+  };
+
   const handleConfirm = () => {
-    if (!selectedAddress) return;
-    if (type === "departure") setDeparture(selectedAddress);
-    else setDestination(selectedAddress);
+    if (!selectedAddress || !selectedRegion) return;
+
+    if (type === "departure") {
+      setDeparture(selectedAddress, selectedRegion);
+    } else {
+      setDestination(selectedAddress, selectedRegion);
+    }
     onClose();
   };
 
@@ -78,7 +125,7 @@ export default function AddressModal({
           return (
             <li
               key={idx}
-              onClick={() => setSelectedAddress(fullRoad || jibun)}
+              onClick={() => handleSelect(item)}
               className={`cursor-pointer rounded-lg border p-3 hover:bg-gray-50 ${
                 selectedAddress === (fullRoad || jibun)
                   ? "border-red-500 bg-red-100"

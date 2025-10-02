@@ -6,23 +6,59 @@ import AddressModal from "@/components/common/modal/AddressModal";
 import Calendar from "@/components/estimate/Calendar";
 import MoveType from "@/components/estimate/MoveType";
 import { Buttons } from "@/components/common/button";
+import api from "@/lib/api/axiosClient";
 
 export default function EstimateForm() {
-  const { date, departure, destination, moveType } = useEstimateStore();
+  const {
+    date,
+    departure,
+    departureRegion,
+    destination,
+    destinationRegion,
+    moveType,
+  } = useEstimateStore();
   const [modalType, setModalType] = useState<
     "departure" | "destination" | null
   >(null);
 
-  const handleSubmit = () => {
-    const payload = { date, departure, destination, moveType };
-    console.log("최종 견적 요청 데이터:", payload);
+  const serviceTypeMap: Record<string, string> = {
+    소형이사: "SMALL",
+    가정이사: "FAMILY",
+    사무실이사: "OFFICE",
+  };
 
-    // 나중에 서버 연결할 때
-    // fetch("/api/estimate", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(payload),
-    // });
+  const handleSubmit = async () => {
+    if (
+      !date ||
+      !departure ||
+      !departureRegion ||
+      !destination ||
+      !destinationRegion ||
+      !moveType
+    ) {
+      alert("모든 정보를 입력해주세요.");
+      return;
+    }
+
+    const payload = {
+      serviceType: serviceTypeMap[moveType] || "SMALL",
+      moveDate: new Date(date).toISOString(),
+      departure,
+      departureRegion,
+      destination,
+      destinationRegion,
+    };
+
+    console.log("이사 요청 payload:", payload);
+
+    try {
+      const res = await api.post("/move-requests", payload);
+      console.log("이사 요청 성공:", res.data);
+      alert("이사 요청이 완료되었습니다!");
+    } catch (err: any) {
+      console.error("이사 요청 실패:", err.response?.data || err);
+      alert("이사 요청에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -58,9 +94,11 @@ export default function EstimateForm() {
                 departure
                   ? "border-red-500 font-medium text-red-500"
                   : "border-orange-500 text-orange-500"
-              } truncate`}
+              }`}
             >
-              {departure || "출발지 선택하기"}
+              <span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                {departure || "출발지 선택하기"}
+              </span>
             </button>
           </div>
 
@@ -73,9 +111,11 @@ export default function EstimateForm() {
                 destination
                   ? "border-red-500 font-medium text-red-500"
                   : "border-orange-500 text-orange-500"
-              } truncate`}
+              }`}
             >
-              {destination || "도착지 선택하기"}
+              <span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                {destination || "도착지 선택하기"}
+              </span>
             </button>
           </div>
         </div>
