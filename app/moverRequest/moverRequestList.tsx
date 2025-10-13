@@ -1,4 +1,4 @@
-// app/moverRequest/MoverRequestList.tsx
+// app/moverRequest/moverRequestList.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -32,14 +32,15 @@ export default function MoverRequestList({
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["moveRequests", filters.page,filters.pageSize],
+    queryKey: ["moveRequests", filters.page, filters.pageSize],
     queryFn: ({ pageParam = 1 }) =>
-      fetchMoveRequests({ ...filters, page: pageParam },accessToken),
+      fetchMoveRequests({ ...filters, page: pageParam }, accessToken),
     getNextPageParam: (lastPage) => {
       const { page, totalPages } = lastPage.meta;
       return page < totalPages ? page + 1 : undefined;
     },
     initialPageParam: 1,
+    // enabled: false,
   });
 
   const observerRef = useRef<HTMLDivElement | null>(null);

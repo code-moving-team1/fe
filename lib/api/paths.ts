@@ -4,8 +4,8 @@ export const AUTH_API = {
   MOVER_SIGNIN: "/auth/mover/signin",
   MOVER_SIGNUP: "/auth/mover/signup",
   MOVER_ME: "/auth/mover/me",
-  MOVER_REFRESH: "/auth/customer/refresh-token",
-  MOVER_LOGOUT: "/auth/mover/logout", 
+  MOVER_REFRESH: "/auth/mover/refresh-token",
+  MOVER_LOGOUT: "/auth/mover/logout",
 
   //일반고객 (CUSTOMER)
   CUSTOMER_SIGNIN: "/auth/customer/signin",

@@ -9,10 +9,10 @@ import MoverRequestList from "./moverRequestList";
 import { cookies } from "next/headers";
 
 export default async function MoverRequestPage() {
-  console.log("🚀 [SERVER] MoverRequestPage 시작됨");
+  // console.log("🚀 [SERVER] MoverRequestPage 시작됨");
 
-  const cookieStore = cookies();
-  const accessToken = (await cookieStore).get("accessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
 
   const queryClient = new QueryClient();
   const initialFilters = { page: 1, pageSize: 5 };
@@ -21,7 +21,7 @@ export default async function MoverRequestPage() {
     initialFilters.page,
     initialFilters.pageSize,
   ];
-  console.log("📡 [SERVER] prefetchInfiniteQuery 실행 직전");
+  // console.log("📡 [SERVER] prefetchInfiniteQuery 실행 직전");
   // 서버에서 첫 페이지 prefetch
   await queryClient.prefetchInfiniteQuery({
     queryKey,
@@ -29,7 +29,7 @@ export default async function MoverRequestPage() {
       fetchMoveRequests({ ...initialFilters, page: pageParam }, accessToken),
     initialPageParam: 1,
   });
-  console.log("✅ [SERVER] prefetchInfiniteQuery 완료");
+  // console.log("✅ [SERVER] prefetchInfiniteQuery 완료");
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
