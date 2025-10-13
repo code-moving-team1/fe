@@ -40,7 +40,7 @@ export default function MoverRequestList({
       return page < totalPages ? page + 1 : undefined;
     },
     initialPageParam: 1,
-    // enabled: false,
+    enabled: false,
   });
 
   const observerRef = useRef<HTMLDivElement | null>(null);
