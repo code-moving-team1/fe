@@ -8,6 +8,7 @@ import FilterBar from "@/components/filter/FilterBar";
 import MoverRequest from "@/components/common/card/MoverRequestCard";
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
+import { formatDateSeoul } from "@/utils/formatDateSeoul";
 
 export default function MoverRequestList({
   initialFilters,
@@ -88,7 +89,7 @@ export default function MoverRequestList({
               description="빠르고 안전한 이사를 원해요"
               from={req.departure}
               to={req.destination}
-              movingDate={new Date(req.moveDate).toLocaleDateString()}
+              movingDate={formatDateSeoul(req.moveDate)}
               chips={[
                 {
                   label:
