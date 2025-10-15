@@ -1,21 +1,31 @@
+import { 
+  validateName, 
+  validateEmail, 
+  validatePhone, 
+  validatePassword, 
+  validateConfirmPassword 
+} from "./validation";
+
+
+
 export default function SingUpPage() {
   return (
 
-    <div className="bg-[#F9502E] h-[1488px] p-[45px] ">
+    <div className="bg-[#ffffff] md:bg-[#F9502E] h-[1488px] p-[45px] ">
 
 <div className=" flex bg-[#FFFFFF] w-full max-w-[740px] mx-auto px-[40px] m-[40px] rounded-[20px] py-[48px] " >
 
-<div className=" w-full flex gap-[48px] justify-center flex-col mx-auto text-[#474643]" >
+<div className=" max-w-[640px] w-full flex gap-[48px] justify-center flex-col mx-auto text-[#474643]" >
 <div className="flex flex-col justify-center text-center max-w-[640px] w-full gap-[8px]" >
     <div className="mx-auto h-[100px] ">
     <img src="/assets/logo.svg" alt="무빙 로고" width={200} height={80} ></img>
     </div>
-    <div className=" flex flex-row gap-[8px] mx-auto text-[20px] w-[300px]">
+    <div className=" flex flex-row gap-[8px] mx-auto text-[20px] ">
     <p>기사님이신가요?</p> <a className="font-semibold underline text-[#F9502E]">기사님 전용 페이지</a>
     </div>
 </div> 
-        <div className="w-full max-w-[640px] gap-[24px] mx-auto">
-  <form className="flex flex-col gap-[56px] mx-auto ">
+        <div className="w-full flex flex-col gap-[24px] ">
+  <form className="flex flex-col gap-[56px] ">
     <div className=" w-full flex flex-col gap-[32px] mx-auto">
 <div className="flex flex-col gap-[16px]">
       <label className="text-[20px]">이름</label>
