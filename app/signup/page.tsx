@@ -21,9 +21,39 @@ type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword"
 
   const [errors, setErrors] = useState({});
 
+  // 입력 값 변경 시 처리 + 실시간 검증
   const handleChange = (e) => {
     const { id, value } = e.target;
     setForm({ ...form, [id]: value });
+
+    // 실시간 유효성 검사
+    let errorMsg = "";
+    switch (id) {
+      case "username":
+        errorMsg = validateName(value);
+        break;
+      case "email":
+        errorMsg = validateEmail(value);
+        break;
+      case "phone":
+        errorMsg = validatePhone(value);
+        break;
+      case "password":
+        errorMsg = validatePassword(value);
+        // 비밀번호 변경 시 confirmPassword도 재검증
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: validateConfirmPassword(value, form.confirmPassword),
+        }));
+        break;
+      case "confirmPassword":
+        errorMsg = validateConfirmPassword(form.password, value);
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({ ...prev, [id]: errorMsg }));
   };
 
   const handleSubmit = (e) => {
