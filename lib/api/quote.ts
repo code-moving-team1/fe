@@ -1,5 +1,6 @@
 // lib/api/quote.ts
 import clientApi from "@/lib/api/axiosClient.client";
+import { fetchMoveRequests } from "@/lib/api/moveRequest";
 
 export interface SendEstimatePayload {
   moveRequestId: number;
@@ -20,4 +21,45 @@ export async function sendEstimateApi({
     type,
   });
   return res.data;
+}
+
+export async function fetchMyQuotes({
+  status = "PENDING",
+  page = 1,
+  pageSize = 10,
+}: {
+  status?: "PENDING" | "REJECTED" | "ACCEPTED";
+  page?: number;
+  pageSize?: number;
+}) {
+  const res = await fetchMoveRequests({
+    page,
+    pageSize,
+    sort: { field: "createdAt", order: "desc" },
+  });
+
+  const all = (res.data ?? []).filter((it: any) => it.myQuote != null);
+
+  const filtered =
+    status === "REJECTED"
+      ? all.filter((it: any) => it.myQuote?.status === "REJECTED")
+      : all.filter((it: any) => it.myQuote?.status !== "REJECTED");
+
+  const shaped = filtered.map((it: any) => ({
+    id: it.id,
+    price: it.myQuote.price,
+    status: it.myQuote.status,
+    type: it.myQuote.type ?? "NORMAL",
+    createdAt: it.createdAt ?? "",
+    moveRequest: {
+      id: it.id,
+      customerName: it.customerName ?? null,
+      departure: it.departure,
+      destination: it.destination,
+      moveDate: it.moveDate,
+      serviceType: it.serviceType,
+    },
+  }));
+
+  return { data: shaped, meta: res.meta };
 }

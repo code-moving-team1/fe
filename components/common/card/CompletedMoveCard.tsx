@@ -10,6 +10,10 @@ interface CompletedMoveCardProps {
   requestType: string;
   price: number;
   className?: string;
+  chips?: {
+    label: string;
+    iconSrc: string;
+  }[];
 }
 
 export default function CompletedMoveCard({
@@ -21,6 +25,7 @@ export default function CompletedMoveCard({
   requestType,
   price,
   className,
+  chips,
 }: CompletedMoveCardProps) {
   return (
     <CustomerEstimateCard
@@ -32,9 +37,10 @@ export default function CompletedMoveCard({
       requestType={requestType}
       price={price}
       className={`relative ${className || ""}`}
+      chips={chips}
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 rounded-xl bg-black/50 text-white">
-        <p className="text-lg font-semibold">이사 완료된 견적이에요</p>
+        <p className="text-lg font-semibold">채택된 견적이에요</p>
         <Buttons
           variant="outline"
           size="figma"

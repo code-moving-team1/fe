@@ -35,7 +35,7 @@ export default function CustomerEstimateCard({
   chips = [],
 }: CustomerEstimateCardProps) {
   return (
-    <Card className={`w-md space-y-5 ${className || ""}`}>
+    <Card className={`w-full space-y-5 ${className || ""}`}>
       <div className="space-y-3">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-3">
