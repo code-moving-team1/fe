@@ -19,6 +19,34 @@ type Form = {
 
 type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword" 
 
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setForm({ ...form, [id]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = {
+      username: validateName(form.username),
+      email: validateEmail(form.email),
+      phone: validatePhone(form.phone),
+      password: validatePassword(form.password),
+      confirmPassword: validateConfirmPassword(
+        form.password,
+        form.confirmPassword
+      ),
+    };
+
+    setErrors(newErrors);
+
+    const hasError = Object.values(newErrors).some((msg) => msg);
+    if (hasError) return;
+
+    console.log("회원가입 성공 🎉", form);
+  };
 
 export default function SignUpPage() {
   const [form, setForm] = useState({
