@@ -88,6 +88,12 @@ function formatKoreanDate(input: string | Date) {
 function formatAddress(address: string) {
   if (!address) return "";
   const parts = address.trim().split(/\s+/);
+  if (/제주특별자치도|제주도/.test(address)) {
+    const cityIdx = parts.findIndex((t) => /시$/.test(t));
+    if (cityIdx !== -1) {
+      return parts.slice(0, cityIdx + 1).join(" ");
+    }
+  }
   const roadIdx = parts.findIndex((t) => /(로|길)$/.test(t));
   if (roadIdx !== -1) {
     const slice = parts.slice(0, roadIdx + 1);
@@ -203,16 +209,20 @@ export default function SentEstimatesPage() {
 
   const quotesRawB: QuoteItem[] =
     (active === "rejected"
-      ? directsQ.data?.pages.flatMap((p: { data: any[] }) =>
-          (p?.data ?? []).map((q) => {
+      ? directsQ.data?.pages.flatMap((p: any) => {
+          const rows: any[] = Array.isArray(p) ? p : (p?.data ?? []);
+          return rows.map((q) => {
             const moveReq = q.moveRequest ?? q.move_request ?? {};
             const statusFromApi =
-              q.status ?? q.direct_request_status ?? q.quoteStatus ?? null;
+              q.status ??
+              q.direct_request_status ??
+              q.quoteStatus ??
+              "REJECTED";
 
             return {
               id: q.id ?? moveReq.id,
               price: q.price ?? 0,
-              status: (statusFromApi || "REJECTED") as QuoteStatus,
+              status: statusFromApi as QuoteStatus,
               type: "DIRECT" as const,
               createdAt:
                 q.createdAt ??
@@ -220,20 +230,29 @@ export default function SentEstimatesPage() {
                 moveReq.updatedAt ??
                 moveReq.createdAt ??
                 "",
-
               moveRequest: {
                 id: moveReq.id,
                 customerName:
                   moveReq.customerName ?? moveReq.customer_name ?? null,
-                departure: moveReq.departure,
-                destination: moveReq.destination,
-                moveDate: moveReq.moveDate ?? moveReq.move_date,
+                departure:
+                  moveReq.departure ??
+                  moveReq.departureAddress ??
+                  moveReq.departure_region ??
+                  moveReq.departureRegion ??
+                  "",
+                destination:
+                  moveReq.destination ??
+                  moveReq.destinationAddress ??
+                  moveReq.destination_region ??
+                  moveReq.destinationRegion ??
+                  "",
+                moveDate: moveReq.moveDate ?? moveReq.move_date ?? "",
                 serviceType: moveReq.serviceType ?? moveReq.service_type,
                 status: moveReq.status,
               },
             };
-          }),
-        )
+          });
+        })
       : []) ?? [];
 
   const quotesRaw: QuoteItem[] = useMemo(
@@ -275,16 +294,9 @@ export default function SentEstimatesPage() {
     const isRejectedTab = active === "rejected";
 
     let base = isRejectedTab
-      ? mine.filter(
-          (it: any) =>
-            it.myQuote?.status === "REJECTED" ||
-            it.moveRequestStatus === "REJECTED",
-        )
+      ? mine.filter((it: any) => it.myQuote?.status === "REJECTED")
       : mine.filter(
-          (it: any) =>
-            it.myQuote &&
-            it.myQuote.status !== "REJECTED" &&
-            it.moveRequestStatus !== "REJECTED",
+          (it: any) => it.myQuote && it.myQuote.status !== "REJECTED",
         );
 
     if (priceSort) {
@@ -320,8 +332,7 @@ export default function SentEstimatesPage() {
       if (!past) return true;
       const status = it.myQuote?.status;
       const isCompleted = status === "ACCEPTED";
-      const isRejected =
-        status === "REJECTED" || it.moveRequestStatus === "REJECTED";
+      const isRejected = status === "REJECTED";
       if (isCompleted || isRejected) {
         return isWithinKeepWindow(it.moveDate, KEEP_AFTER_MOVE_DAYS);
       }
@@ -548,13 +559,13 @@ export default function SentEstimatesPage() {
                         <RejectedRequestCard
                           {...baseProps}
                           chips={chips}
-                          className="border border-gray-200 bg-white"
+                          className="h-[285px] border border-gray-200 bg-white"
                         />
                       ) : isCompleted ? (
                         <CompletedMoveCard
                           {...baseProps}
                           chips={chips}
-                          className="h-[265px] border border-gray-200 bg-white"
+                          className="h-[285px] border border-gray-200 bg-white"
                         />
                       ) : (
                         <CustomerEstimateCard
