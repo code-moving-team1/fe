@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomerEstimateCard from "@/components/common/card/CustomerEstimateCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchMyQuotes } from "@/lib/api/quote";
+import { fetchMyQuotes, fetchMyDirectRequests } from "@/lib/api/quote";
 import type { MoveRequestItem, MoveRequestFilter } from "@/lib/api/moveRequest";
 import { useMe } from "@/hooks/useAuth";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -143,14 +143,7 @@ export default function SentEstimatesPage() {
   const statusForTab: QuoteStatus =
     active === "rejected" ? "REJECTED" : "PENDING";
 
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const quotesQ = useInfiniteQuery({
     queryKey: ["myQuotes", statusForTab, PAGE_SIZE],
     queryFn: ({ pageParam = 1 }) =>
       fetchMyQuotes({
@@ -167,10 +160,86 @@ export default function SentEstimatesPage() {
     enabled: mounted && isMover,
   });
 
+  const directsQ = useInfiniteQuery({
+    queryKey: ["myDirectRequests", statusForTab, PAGE_SIZE],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchMyDirectRequests({
+        status: statusForTab,
+        page: pageParam,
+        pageSize: PAGE_SIZE,
+      }),
+    getNextPageParam: (last) => {
+      const page = last?.meta?.page ?? 1;
+      const totalPages = last?.meta?.totalPages ?? 1;
+      return page < totalPages ? page + 1 : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 30_000,
+    enabled: mounted && isMover && active === "rejected",
+  });
+
   useEffect(() => setMounted(true), []);
 
-  const quotesRaw: QuoteItem[] =
-    data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
+  useEffect(() => {
+    if (directsQ.isError) {
+      console.log("지정견적 에러:", directsQ.error);
+    }
+  }, [directsQ.isError, directsQ.error]);
+
+  const isLoading =
+    quotesQ.isLoading || (active === "rejected" && directsQ.isLoading);
+  const isError =
+    quotesQ.isError || (active === "rejected" && !!directsQ.isError);
+  const hasNextPage = !!(
+    quotesQ.hasNextPage ||
+    (active === "rejected" && directsQ.hasNextPage)
+  );
+  const isFetchingNextPage =
+    quotesQ.isFetchingNextPage ||
+    (active === "rejected" && directsQ.isFetchingNextPage);
+
+  const quotesRawA: QuoteItem[] =
+    quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
+
+  const quotesRawB: QuoteItem[] =
+    (active === "rejected"
+      ? directsQ.data?.pages.flatMap((p: { data: any[] }) =>
+          (p?.data ?? []).map((q) => {
+            const moveReq = q.moveRequest ?? q.move_request ?? {};
+            const statusFromApi =
+              q.status ?? q.direct_request_status ?? q.quoteStatus ?? null;
+
+            return {
+              id: q.id ?? moveReq.id,
+              price: q.price ?? 0,
+              status: (statusFromApi || "REJECTED") as QuoteStatus,
+              type: "DIRECT" as const,
+              createdAt:
+                q.createdAt ??
+                q.updatedAt ??
+                moveReq.updatedAt ??
+                moveReq.createdAt ??
+                "",
+
+              moveRequest: {
+                id: moveReq.id,
+                customerName:
+                  moveReq.customerName ?? moveReq.customer_name ?? null,
+                departure: moveReq.departure,
+                destination: moveReq.destination,
+                moveDate: moveReq.moveDate ?? moveReq.move_date,
+                serviceType: moveReq.serviceType ?? moveReq.service_type,
+                status: moveReq.status,
+              },
+            };
+          }),
+        )
+      : []) ?? [];
+
+  const quotesRaw: QuoteItem[] = useMemo(
+    () => (active === "rejected" ? [...quotesRawA, ...quotesRawB] : quotesRawA),
+    [active, quotesRawA, quotesRawB],
+  );
 
   const all = quotesRaw.map((q) => ({
     id: q.moveRequest.id,
@@ -184,11 +253,23 @@ export default function SentEstimatesPage() {
       price: q.price,
       status: q.status,
       type: q.type ?? "NORMAL",
-      createdAt: q.createdAt,
+      createdAt: q.createdAt ?? "",
     },
   }));
 
-  const mine = useMemo(() => all.filter((it) => it.myQuote != null), [all]);
+  const mine = useMemo(() => {
+    const byId = new Map<number, (typeof all)[number]>();
+    for (const it of all) {
+      const prev = byId.get(it.id);
+      if (!prev) byId.set(it.id, it);
+      else {
+        const a = new Date(prev.myQuote.createdAt).getTime();
+        const b = new Date(it.myQuote.createdAt).getTime();
+        if (b > a) byId.set(it.id, it);
+      }
+    }
+    return Array.from(byId.values());
+  }, [all]);
 
   const list = useMemo(() => {
     const isRejectedTab = active === "rejected";
@@ -265,13 +346,19 @@ export default function SentEstimatesPage() {
 
   const loadMoreRef = useInfiniteScroll(
     () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
+      if (quotesQ.hasNextPage && !quotesQ.isFetchingNextPage) {
+        quotesQ.fetchNextPage();
+      }
+      if (
+        active === "rejected" &&
+        directsQ.hasNextPage &&
+        !directsQ.isFetchingNextPage
+      ) {
+        directsQ.fetchNextPage();
       }
     },
     hasNextPage && mounted && isMover,
   );
-
   if (!mounted) {
     return (
       <div className={`${CONTAINER} pt-6 pb-12`}>

@@ -179,6 +179,7 @@ export default function AddressModal({
       }
       trigger={undefined}
       onConfirm={handleConfirm}
+      confirmText="확인"
     >
       <div className="relative mb-3">
         <input

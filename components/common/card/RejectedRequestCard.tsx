@@ -33,7 +33,7 @@ export default function RejectedRequestCard({
   chips = [],
 }: RejectedRequestCardProps) {
   return (
-    <Card className={`relative w-md space-y-5 ${className || ""}`}>
+    <Card className={`relative space-y-5 ${className || ""}`}>
       <div className="space-y-3">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-3">

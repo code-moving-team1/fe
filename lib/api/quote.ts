@@ -50,7 +50,7 @@ export async function fetchMyQuotes({
     price: it.myQuote.price,
     status: it.myQuote.status,
     type: it.myQuote.type ?? "NORMAL",
-    createdAt: it.createdAt ?? "",
+    createdAt: it.myQuote.createdAt ?? "",
     moveRequest: {
       id: it.id,
       customerName: it.customerName ?? null,
@@ -62,4 +62,19 @@ export async function fetchMyQuotes({
   }));
 
   return { data: shaped, meta: res.meta };
+}
+
+export async function fetchMyDirectRequests({
+  status = "PENDING",
+  page = 1,
+  pageSize = 20,
+}: {
+  status?: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
+  page?: number;
+  pageSize?: number;
+}) {
+  const res = await clientApi.get("/direct-quote-request/mover/rejected", {
+    params: { status, page, pageSize },
+  });
+  return res.data;
 }
