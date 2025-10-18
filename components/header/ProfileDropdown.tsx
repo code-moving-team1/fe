@@ -22,7 +22,10 @@ export default function ProfileDropdown({
   return (
     <div className="absolute top-full left-0 mt-2 w-45 rounded-lg border border-gray-200 bg-white shadow-lg">
       <div className="px-4 py-4 text-sm font-bold text-gray-800">
-        {me?.nickname ?? (userType === "mover" ? "기사" : "고객")}님
+        {/* {me?.name ?? (userType === "mover" ? "기사" : "고객")}님 */}
+        {me?.name
+          ? `${me.name} ${userType === "mover" ? "기사" : "고객"}님`
+          : `${userType === "mover" ? "기사" : "고객"}님`}
       </div>
 
       <ul className="text-sm text-gray-700">

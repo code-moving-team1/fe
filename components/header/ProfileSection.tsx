@@ -23,6 +23,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
       </a>
     );
   }
+  console.log(me);
 
   const userType = "career" in me ? "mover" : "customer";
 
@@ -37,8 +38,8 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
           <Image src={profileIcon} alt="프로필" width={36} height={36} />
           <span className="font-bold text-black">
             {userType === "mover"
-              ? (me?.nickname ?? "기사님")
-              : (me?.email ?? "고객님")}
+              ? (me?.name ?? "기사님")
+              : (me?.name ?? "고객님")}
           </span>
         </button>
         {open && <ProfileDropdown userType={userType} me={me} />}

@@ -5,6 +5,7 @@ export interface CustomerMe {
   phone: string;
   region: string;
   nickname?: string;
+  name?: string;
 }
 
 export interface MoverMe {
@@ -15,6 +16,7 @@ export interface MoverMe {
   career: string;
   introduction: string;
   description: string;
+  name?: string;
 }
 
 export type MeResponse = CustomerMe | MoverMe;
