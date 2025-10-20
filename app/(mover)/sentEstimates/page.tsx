@@ -537,7 +537,7 @@ export default function SentEstimatesPage() {
                       : []),
                   ];
                   const name = item.customerName
-                    ? `${item.customerName} 고객님`
+                    ? `${item.customerName}`
                     : "고객님";
 
                   const isRejected = item.myQuote?.status === "REJECTED";

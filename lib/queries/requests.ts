@@ -57,6 +57,7 @@ export type DirectRow = {
   direct_request_id: number;
   direct_request_status: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
   direct_request_created_at: string;
+  customer_name?: string;
 };
 
 export type DirectListResponse = {

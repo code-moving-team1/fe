@@ -65,11 +65,14 @@ export default function DirectList() {
         {rows.map((r) => {
           const chip = svcMap[r.serviceType];
           const isPending = r.direct_request_status === "PENDING";
+          const customerName = r.customer_name
+            ? `${r.customer_name}`
+            : "고객님";
           return (
             <div>
               <ReceivedRequestCard
                 key={r.direct_request_id}
-                customerName={"고객님"}
+                customerName={customerName}
                 from={r.departure}
                 to={r.destination}
                 movingDate={new Date(r.moveDate).toLocaleDateString("ko-KR")}
@@ -105,7 +108,7 @@ export default function DirectList() {
                     className="hidden"
                   />
                 }
-                customerName={"고객님"}
+                customerName={customerName}
                 moveRequestId={r.id}
                 departure={r.departure}
                 destination={r.destination}
@@ -131,7 +134,7 @@ export default function DirectList() {
                     className="hidden"
                   />
                 }
-                customerName={"고객님"}
+                customerName={customerName}
                 departure={r.departure}
                 destination={r.destination}
                 moveDate={r.moveDate}
