@@ -56,7 +56,8 @@ export async function fetchMyQuotes({
     createdAt: it.myQuote.createdAt ?? "",
     moveRequest: {
       id: it.id,
-      customerName: it.customerName ?? null,
+      customerName:
+        it.customerName ?? it.customer?.name ?? it.customer?.nickname ?? null,
       departure: it.departure,
       destination: it.destination,
       moveDate: it.moveDate,
