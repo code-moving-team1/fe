@@ -7,17 +7,15 @@ import MoverAvatar from "../../common/card/Mover/MoverAvatar";
 import MoverName from "../../common/card/Mover/MoverName";
 import CardDateInfo from "../../common/card/CardDateInfo";
 import CardRouteInfo from "../../common/card/CardRouteInfo";
-import { ServiceChip, DesignatedQuoteChip } from "../chip/presets";
+import { ServiceChip } from "../chip/presets";
 import RatingStars from "../rating/RatingStars";
 
-// moveTypes에 넣을 수 있는 값들 (둘 다 한 번에 표현 가능)
 type MoveType = "small" | "family" | "office" | "normal" | "designated";
 
 export interface ReviewWriteModalProps {
   trigger: React.ReactNode;
   moverName: string;
   moverAvatarSrc?: string;
-  /** 칩 제어용: ["small" | "family" | "office" | "normal" | "designated"] */
   moveTypes?: MoveType[];
   fromAddress: string;
   toAddress: string;
@@ -49,9 +47,7 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
     className,
   } = props;
 
-  // ---- 칩 렌더 도우미 ----
   const renderServiceChip = () => {
-    // 하나만 표시 (우선순위: small > family > office)
     if (moveTypes.includes("small")) {
       return (
         <ServiceChip size="sm" iconSrc="/icons/ic_box.svg">
@@ -76,23 +72,6 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
     return null;
   };
 
-  const renderQuoteChip = () => {
-    // 일반/지정 중 하나 표시 (우선순위: designated > normal)
-    if (moveTypes.includes("designated")) {
-      return (
-        <DesignatedQuoteChip size="sm">지정 견적 요청</DesignatedQuoteChip>
-      );
-    }
-    if (moveTypes.includes("normal")) {
-      return (
-        <ServiceChip size="sm" iconSrc="/icons/ic_document.svg">
-          일반 견적
-        </ServiceChip>
-      );
-    }
-    return null;
-  };
-
   return (
     <BaseModal
       trigger={trigger}
@@ -111,14 +90,12 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
       }}
     >
       <header>
-        {/* 칩 2개 영역: 서비스 유형 / 견적 유형 */}
         <div className="mb-2 flex items-center gap-2">
           {renderServiceChip()}
-          {renderQuoteChip()}
         </div>
 
         <div className="flex items-center justify-between">
-          <MoverName MoverName={moverName} />
+          <MoverName MoverName={moverName} className="text-2xl font-semibold" />
           <MoverAvatar
             avatarUrl={moverAvatarSrc}
             size={56}
@@ -129,11 +106,12 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
 
       <hr className="border-gray-200" />
 
-      <section className="mb-4 grid grid-cols-3 gap-6">
+      <section className="mb-4 grid grid-cols-3 items-start gap-6">
         <div className="col-span-2">
           <CardRouteInfo from={fromAddress} to={toAddress} showArrow />
         </div>
-        <div>
+
+        <div className="justify-self-end overflow-hidden text-right text-ellipsis whitespace-nowrap">
           <CardDateInfo movingDate={moveDateText} />
         </div>
       </section>

@@ -21,11 +21,10 @@ interface ReviewWrittenCardProps {
   price?: number | null;
   rating: number;
   comment: string;
-
   onEdit?: () => void;
   onDelete?: () => void;
-
   className?: string;
+  moverDescription?: string;
 }
 
 export default function ReviewWrittenCard({
@@ -41,6 +40,7 @@ export default function ReviewWrittenCard({
   onEdit,
   onDelete,
   className,
+  moverDescription,
 }: ReviewWrittenCardProps) {
   const safeRating = useMemo(() => {
     if (Number.isNaN(rating)) return 0;
@@ -57,7 +57,10 @@ export default function ReviewWrittenCard({
           <MoverAvatar avatarUrl={moverAvatarUrl} size={80} />
           <div>
             <MoverName MoverName={moverName} />
-            <p className="mt-1 text-sm text-gray-500">나는 {moverName}다 </p>
+            {typeof moverDescription === "string" &&
+              moverDescription.trim() && (
+                <p className="mt-1 text-sm text-gray-500">{moverDescription}</p>
+              )}
             <div className="mt-2">
               <ServiceChip iconSrc="/icons/ic_box.svg" size="sm">
                 {serviceLabel}

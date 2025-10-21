@@ -11,10 +11,12 @@ type ReviewableRow = {
   type: "NORMAL" | "DIRECT";
   mover?: {
     id: number;
-    nickname?: string | null;
+    name?: string | null;
     averageRating?: number | null;
     totalReviews?: number | null;
     img?: string | null;
+    introduction?: string | null;
+    description?: string | null;
   } | null;
   move?: {
     from?: string | null;
@@ -29,14 +31,15 @@ const SERVICE_LABEL: Record<string, string> = {
   OFFICE: "사무실이사",
 };
 
-const fmtDate = (iso?: string) =>
-  iso ? new Date(iso).toLocaleDateString("ko-KR") : "-";
+const fmt = (iso?: string | Date) =>
+  iso
+    ? new Date(iso as any).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "-";
 
-/**
- * 작성 가능한 리뷰 카드 리스트 훅
- * - GET /bookings/reviewables (고객 로그인 필요)
- * - 백엔드에서 이미 mover, move, price 스냅샷 제공하므로 추가 조회 없이 매핑만 함
- */
 export function useWritableReviewCards(page = 1, pageSize = 10) {
   const q = useQuery({
     queryKey: ["writableReviews", page, pageSize],
@@ -62,21 +65,22 @@ export function useWritableReviewCards(page = 1, pageSize = 10) {
       const svc = row.move?.serviceType ?? "SMALL";
       const mover = row.mover ?? undefined;
 
+      const moverDescription = [mover?.introduction, mover?.description]
+        .filter((v) => typeof v === "string" && v.trim().length > 0)
+        .join(" ");
+
       return {
-        // 리스트 키 & 제출용
         id: row.bookingId,
         bookingId: row.bookingId,
-
-        // 카드 표시용
-        moverName: mover?.nickname || "이사업체",
+        moverId: mover?.id,
+        moverName: mover?.name || "기사이름",
         moverAvatarUrl: mover?.img || "",
+        moverDescription,
         serviceLabel: SERVICE_LABEL[svc] ?? "이사",
         from: row.move?.from ?? "",
         to: row.move?.to ?? "",
-        moveDate: fmtDate(row.serviceDate),
+        moveDate: fmt(row.serviceDate),
         price: row.price ?? 0,
-
-        // (옵션) 추가 정보
         rating: mover?.averageRating ?? 0,
         reviewCount: mover?.totalReviews ?? 0,
         moveTypes: [String(svc).toLowerCase()],
