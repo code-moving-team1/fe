@@ -15,7 +15,8 @@ interface Props {
 
 export default function ProfileSection({ me, open, setOpen }: Props) {
   const [alarmOpen, setAlarmOpen] = useState(false);
-  const { unread, items, loading, onClickItem, onMarkAllRead } = useNotifications();
+  const { unread, items, loading, onClickItem, onMarkAllRead } =
+    useNotifications();
   if (!me) {
     return (
       //@TODO 추후 우리 버튼컴포넌트 사용
@@ -27,7 +28,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
       </a>
     );
   }
-  console.log(me);
+  // console.log(me);
 
   const userType = "career" in me ? "mover" : "customer";
 
