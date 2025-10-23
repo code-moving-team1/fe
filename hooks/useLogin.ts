@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { customerSignIn, moverSignIn } from "@/lib/auth";
 import { useAuthStore } from "@/contexts/authStore";
 import { useRouter } from "next/navigation";
+import { getSocket, refreshSocketAuth } from "@/lib/socket/socket";
 
 export const useLogin = (userType: "customer" | "mover") => {
   const queryClient = useQueryClient();
@@ -20,7 +21,10 @@ export const useLogin = (userType: "customer" | "mover") => {
       // React Query 캐시 무효화 하고 다시 me api 호출
       queryClient.invalidateQueries({ queryKey: ["me", userType] });
 
-      //메인화면으로 이동 
+      refreshSocketAuth();
+      getSocket();
+
+      //메인화면으로 이동
       router.push("/landing");
     },
   });
