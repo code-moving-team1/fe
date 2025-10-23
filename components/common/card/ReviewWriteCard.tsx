@@ -17,7 +17,7 @@ interface ReviewWriteCardProps {
   from: string;
   to: string;
   moveDate: string;
-  price: number;
+  price?: number | null;
   onWrite?: () => void;
   className?: string;
   moverDescription?: string;
@@ -30,26 +30,30 @@ export default function ReviewWriteCard({
   from,
   to,
   moveDate,
-  price,
+  price = null,
   onWrite,
   className,
   moverDescription,
 }: ReviewWriteCardProps) {
   return (
     <Card
-      className={`flex flex-col justify-between border border-gray-200 bg-white p-6 shadow-sm ${className || ""}`}
+      className={`flex w-full flex-col justify-between border border-gray-200 bg-white p-5 shadow-sm md:p-6 ${className || ""}`}
       aria-label="리뷰 작성 카드"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 flex-1 items-center gap-4">
+      <div className="relative flex items-start justify-between gap-3 md:gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-3 md:gap-4">
           <MoverAvatar avatarUrl={moverAvatarUrl} size={80} />
           <div className="min-w-0">
-            <MoverName MoverName={moverName} />
-            {moverDescription && (
+            <div className="min-w-0 truncate pr-2 font-semibold whitespace-nowrap text-gray-900 md:pr-0">
+              <MoverName MoverName={moverName} />
+            </div>
+
+            {!!moverDescription && (
               <p className="mt-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap text-gray-500">
                 {moverDescription}
               </p>
             )}
+
             <div className="mt-2">
               <ServiceChip iconSrc="/icons/ic_box.svg" size="sm">
                 {serviceLabel}
@@ -58,26 +62,38 @@ export default function ReviewWriteCard({
           </div>
         </div>
 
-        <div className="w-[180px] flex-none text-right whitespace-nowrap">
-          <CardPrice
-            amount={price}
-            showLabel={true}
-            className="flex-col items-end [&>span:first-child]:text-base [&>span:first-child]:font-medium [&>span:first-child]:text-gray-500 [&>span:last-child]:text-3xl [&>span:last-child]:leading-tight [&>span:last-child]:font-extrabold"
-          />
-        </div>
+        {price !== null && price !== undefined && (
+          <div className="w-[140px] flex-none text-right whitespace-nowrap md:w-[180px]">
+            <CardPrice
+              amount={price}
+              showLabel
+              className="flex-col items-end [&>span:first-child]:text-[13px] [&>span:first-child]:font-medium [&>span:first-child]:text-gray-500 md:[&>span:first-child]:text-base [&>span:last-child]:text-2xl [&>span:last-child]:leading-tight [&>span:last-child]:font-extrabold md:[&>span:last-child]:text-3xl"
+            />
+          </div>
+        )}
       </div>
 
       <div className="my-4 border-t border-gray-100" />
 
-      <div className="flex items-center justify-between text-sm font-bold">
-        <div className="flex min-w-0 items-center gap-8">
+      <div className="flex flex-col gap-3 text-sm font-bold md:flex-row md:items-center md:justify-between md:text-sm">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-8">
           <CardRouteInfo from={from} to={to} showArrow />
-          <CardDateInfo movingDate={moveDate} />
+          <CardDateInfo
+            movingDate={moveDate}
+            className="order-2 md:order-none"
+          />
         </div>
 
-        <Buttons size="figma" onClick={onWrite} aria-label="리뷰 작성하기">
-          리뷰 작성하기
-        </Buttons>
+        <div className="w-full md:w-auto">
+          <Buttons
+            size="figma"
+            onClick={onWrite}
+            aria-label="리뷰 작성하기"
+            className="w-full md:w-auto"
+          >
+            리뷰 작성하기
+          </Buttons>
+        </div>
       </div>
     </Card>
   );

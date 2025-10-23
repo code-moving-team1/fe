@@ -82,9 +82,12 @@ export default function ReviewWrittenCard({
 
       <div className="my-4 border-t border-gray-100" />
 
-      <div className="flex items-center justify-between text-sm font-bold">
-        <div className="flex items-center gap-8">
+      <div className="flex flex-col gap-2 text-sm font-bold md:flex-row md:items-center md:justify-between md:gap-8">
+        <div className="order-1 flex items-center gap-6 md:order-none">
           <CardRouteInfo from={from} to={to} showArrow />
+        </div>
+
+        <div className="order-2 md:order-none">
           <CardDateInfo movingDate={moveDate} />
         </div>
       </div>

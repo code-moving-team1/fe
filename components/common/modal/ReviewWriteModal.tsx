@@ -1,3 +1,4 @@
+// components/common/modal/ReviewWriteModal.tsx
 "use client";
 
 import * as React from "react";
@@ -76,7 +77,7 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
     <BaseModal
       trigger={trigger}
       title="리뷰 쓰기"
-      className={`max-w-md ${className || ""}`}
+      className={`w-full max-w-[calc(100vw-2rem)] md:max-w-md ${className || ""}`}
       showRouteInfo={false}
       showTextArea
       textAreaLabel="상세 후기를 작성해 주세요"
@@ -94,24 +95,29 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
           {renderServiceChip()}
         </div>
 
-        <div className="flex items-center justify-between">
-          <MoverName MoverName={moverName} className="text-2xl font-semibold" />
+        <div className="flex flex-col-reverse items-start gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <MoverName
+              MoverName={moverName}
+              className="truncate text-xl font-semibold whitespace-nowrap md:text-2xl"
+            />
+          </div>
           <MoverAvatar
             avatarUrl={moverAvatarSrc}
             size={56}
-            className="h-14 w-14 rounded-xl"
+            className="h-14 w-14 flex-none self-start rounded-xl md:self-auto"
           />
         </div>
       </header>
 
       <hr className="border-gray-200" />
 
-      <section className="mb-4 grid grid-cols-3 items-start gap-6">
-        <div className="col-span-2">
+      <section className="mb-4 grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-6">
+        <div className="md:col-span-2">
           <CardRouteInfo from={fromAddress} to={toAddress} showArrow />
         </div>
 
-        <div className="justify-self-end overflow-hidden text-right text-ellipsis whitespace-nowrap">
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-700 md:justify-self-end md:text-right">
           <CardDateInfo movingDate={moveDateText} />
         </div>
       </section>
@@ -123,7 +129,7 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
           onChange={onChangeRating}
           size={28}
           gap={12}
-          className="mt-1"
+          className="mx-auto mt-1 md:mx-0"
         />
       </section>
     </BaseModal>

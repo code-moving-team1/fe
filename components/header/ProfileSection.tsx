@@ -1,10 +1,12 @@
 // components/header/ProfileSection.tsx
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import ProfileDropdown from "./ProfileDropdown";
 import alarmIcon from "@/public/icons/ic_alarm.svg";
 import profileIcon from "@/public/icons/ic_profile.svg";
 import { MeResponse } from "@/types/auth";
-import { useState } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 
 interface Props {
@@ -17,9 +19,33 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
   const [alarmOpen, setAlarmOpen] = useState(false);
   const { unread, items, loading, onClickItem, onMarkAllRead } =
     useNotifications();
+
+  const profileRef = useRef<HTMLDivElement | null>(null);
+  const alarmRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (profileRef.current && !profileRef.current.contains(t)) setOpen(false);
+      if (alarmRef.current && !alarmRef.current.contains(t))
+        setAlarmOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        setAlarmOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDoc);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [setOpen]);
+
   if (!me) {
     return (
-      //@TODO 추후 우리 버튼컴포넌트 사용
       <a
         href="/login"
         className="rounded-lg bg-orange-600 px-6 py-1.5 text-white"
@@ -28,16 +54,17 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
       </a>
     );
   }
-  // console.log(me);
 
   const userType = "career" in me ? "mover" : "customer";
 
   return (
     <div className="flex items-center gap-6">
-      {/* 알림 버튼 */}
-      <div className="relative">
+      <div ref={alarmRef} className="relative">
         <button
-          onClick={() => setAlarmOpen((v) => !v)}
+          onClick={() => {
+            setAlarmOpen((v) => !v);
+            setOpen(false);
+          }}
           className="relative"
           aria-label="알림"
         >
@@ -49,37 +76,41 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
           )}
         </button>
 
-        {/* 알림 패널 */}
         {alarmOpen && (
-          <div className="absolute right-0 z-50 mt-2 w-80 rounded-xl border bg-white shadow-lg">
-            <div className="flex items-center justify-between border-b px-4 py-3">
-              <strong className="text-sm">알림</strong>
+          <div className="absolute top-[calc(100%+12px)] left-1/2 z-[60] w-[92vw] max-w-[320px] -translate-x-1/2 rounded-2xl border border-gray-200 bg-white shadow-xl md:w-[360px] md:max-w-none">
+            <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 md:px-5">
+              <strong className="text-sm font-semibold text-gray-900 md:text-base">
+                알림
+              </strong>
               <button
-                className="text-xs text-gray-500 hover:text-gray-700"
+                className="text-xs text-gray-400 hover:text-gray-600 md:text-sm"
                 onClick={onMarkAllRead}
               >
                 모두 읽음
               </button>
             </div>
-            <div className="max-h-96 overflow-auto">
+
+            <div className="max-h-[55vh] overflow-y-auto py-1 md:max-h-[60vh] md:py-2">
               {loading ? (
                 <div className="p-4 text-sm text-gray-400">불러오는 중…</div>
               ) : items.length === 0 ? (
                 <div className="p-4 text-sm text-gray-400">알림이 없어요.</div>
               ) : (
                 items.map((n) => (
-                  <button
+                  <div
                     key={n.id}
                     onClick={() => onClickItem(n)}
-                    className={`w-full px-4 py-3 text-left hover:bg-gray-50 ${
+                    className={`cursor-pointer border-b border-gray-100 px-4 py-3 hover:bg-gray-50 md:px-5 ${
                       n.isRead ? "text-gray-500" : "text-gray-900"
                     }`}
                   >
-                    <div className="text-sm">{n.content}</div>
-                    <div className="mt-1 text-xs text-gray-400">
+                    <div className="text-[14px] leading-snug md:text-[15px]">
+                      {n.content}
+                    </div>
+                    <div className="mt-1 text-[11px] text-gray-400 md:text-xs">
                       {new Date(n.createdAt).toLocaleString("ko-KR")}
                     </div>
-                  </button>
+                  </div>
                 ))
               )}
             </div>
@@ -87,10 +118,12 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
         )}
       </div>
 
-      {/* 프로필 드롭다운 */}
-      <div className="relative flex items-center gap-2">
+      <div ref={profileRef} className="relative z-[60] flex items-center gap-2">
         <button
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            setOpen(!open);
+            setAlarmOpen(false);
+          }}
           className="flex items-center gap-2"
         >
           <Image src={profileIcon} alt="프로필" width={36} height={36} />
@@ -105,6 +138,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
     </div>
   );
 }
+
 //   return (
 //     <div className="flex items-center gap-6">
 //       <Image src={alarmIcon} alt="알람" width={30} height={30} />
