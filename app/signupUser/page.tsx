@@ -30,7 +30,6 @@ export default function SignupUserPage() {
   });
 
   const [errors, setErrors] = useState<Form>({});
-
   // 입력 값 변경 시 처리 + 실시간 검증
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
