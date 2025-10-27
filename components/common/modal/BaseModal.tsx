@@ -15,21 +15,17 @@ interface BaseModalProps {
   description?: string;
   children?: React.ReactNode;
   className?: string;
-  // 상단 정보 영역
   departure?: string;
   destination?: string;
   moveDate?: string;
   showRouteInfo?: boolean;
-  // 내부 textArea 설정
   showTextArea?: boolean;
   textAreaLabel?: string;
   minLength?: number;
-  // 추가 입력 필드
   extraFields?: React.ReactNode;
-  // 버튼 제어
   confirmText?: string;
   confirmLoading?: boolean;
-  validate?: (value: string) => boolean; //추가 검증
+  validate?: (value: string) => boolean;
   onConfirm?: (value: string) => void | Promise<void>;
 
   open?: boolean;
@@ -46,18 +42,14 @@ export default function BaseModal({
   destination,
   moveDate,
   showRouteInfo = true,
-
   showTextArea = true,
   textAreaLabel = "내용을 입력해 주세요",
   minLength = 10,
-
   extraFields,
-
   confirmText,
   confirmLoading,
   validate,
   onConfirm,
-
   open,
   onOpenChange,
 }: BaseModalProps) {
@@ -81,7 +73,14 @@ export default function BaseModal({
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
 
         <Dialog.Content
-          className={`fixed top-1/2 left-1/2 flex w-[600px] -translate-x-1/2 -translate-y-1/2 flex-col gap-6 rounded-4xl bg-white p-6 shadow-lg ${className || ""}`}
+          className={[
+            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+            "flex flex-col gap-5 rounded-3xl bg-white p-5 shadow-lg md:gap-6 md:rounded-4xl md:p-6",
+            "w-[calc(100vw-32px)] max-w-[420px] md:w-[600px] md:max-w-none",
+            "max-h-[calc(100dvh-32px)] overflow-y-auto",
+
+            className || "",
+          ].join(" ")}
         >
           <div className="flex items-center justify-between">
             {title && (
@@ -96,7 +95,6 @@ export default function BaseModal({
               </button>
             </Dialog.Close>
           </div>
-
           {description && (
             <Dialog.Description className="text-lg font-normal">
               {description}

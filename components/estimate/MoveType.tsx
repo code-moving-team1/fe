@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEstimateStore } from "@/store/estimateStore";
 import { CheckCircle } from "lucide-react";
-import Image from "next/image";
 
 export default function MoveType() {
   const { moveType, setMoveType } = useEstimateStore();
@@ -29,45 +29,53 @@ export default function MoveType() {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {options.map((opt) => {
-        const isActive = moveType === opt.label;
+        const active = moveType === opt.label;
+
         return (
           <button
             key={opt.id}
+            type="button"
             onClick={() => setMoveType(opt.label)}
-            className={`flex h-48 w-full cursor-pointer flex-col justify-between rounded-2xl border p-4 text-left transition ${
-              isActive
+            className={[
+              "w-full rounded-2xl border p-4 text-left transition",
+              "flex items-center justify-between gap-3",
+              "md:h-48 md:flex-col md:items-stretch md:justify-between",
+              active
                 ? "border-red-500 bg-orange-50"
-                : "border-gray-200 bg-white hover:bg-gray-50"
-            }`}
+                : "border-gray-200 bg-white hover:bg-gray-50",
+            ].join(" ")}
           >
-            <div className="flex items-start gap-2">
-              {isActive ? (
-                <CheckCircle className="h-5 w-5 text-red-500" />
+            <div className="flex min-w-0 flex-1 items-start gap-2">
+              {active ? (
+                <CheckCircle className="mt-0.5 h-5 w-5 flex-none text-red-500" />
               ) : (
-                <span className="h-5 w-5 rounded-full border border-gray-300" />
+                <span className="mt-0.5 h-5 w-5 flex-none rounded-full border border-gray-300" />
               )}
-              <div>
+
+              <div className="min-w-0">
                 <p
-                  className={`font-bold ${
-                    isActive ? "text-red-500" : "text-gray-900"
-                  }`}
+                  className={`truncate font-bold ${active ? "text-red-500" : "text-gray-900"}`}
                 >
                   {opt.label}
                 </p>
                 <p
-                  className={`text-sm ${
-                    isActive ? "text-red-400" : "text-gray-500"
-                  }`}
+                  className={`mt-1 truncate text-sm ${active ? "text-red-400" : "text-gray-500"}`}
                 >
                   {opt.desc}
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <Image src={opt.img} alt={opt.label} width={80} height={80} />
+            <div className="flex-none md:flex md:w-full md:justify-end md:self-end">
+              <Image
+                src={opt.img}
+                alt={opt.label}
+                width={120}
+                height={88}
+                className="h-[88px] w-[120px] object-contain md:h-20 md:w-20"
+              />
             </div>
           </button>
         );

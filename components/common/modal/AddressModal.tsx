@@ -29,6 +29,7 @@ const regionMap: Record<string, string> = {
   제주: "제주",
   세종: "세종",
 };
+
 export default function AddressModal({
   type,
   onClose,
@@ -104,7 +105,9 @@ export default function AddressModal({
 
     const timer = setTimeout(async () => {
       const res = await fetch(
-        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`,
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
+          query,
+        )}`,
         {
           headers: {
             Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_API_KEY}`,
@@ -117,22 +120,6 @@ export default function AddressModal({
 
     return () => clearTimeout(timer);
   }, [query]);
-
-  const handleSearch = async (value: string) => {
-    setQuery(value);
-    if (!value.trim()) return setResults([]);
-
-    const res = await fetch(
-      `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(value)}`,
-      {
-        headers: {
-          Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_API_KEY}`,
-        },
-      },
-    );
-    const data = await res.json();
-    setResults(data.documents || []);
-  };
 
   const handleSelect = (item: any) => {
     const road = item.road_address?.address_name;
@@ -147,11 +134,6 @@ export default function AddressModal({
         ?.replace("도", "") || "서울";
 
     const regionFinal = regionMap[regionKorean] || "서울";
-
-    console.log("선택된 지역:", {
-      fullAddress,
-      regionKorean,
-    });
 
     setSelectedAddress(fullAddress);
     setSelectedRegion(regionFinal);
@@ -181,74 +163,147 @@ export default function AddressModal({
       onConfirm={handleConfirm}
       confirmText="확인"
     >
-      <div className="relative mb-3">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setSelectedAddress("");
-          }}
-          placeholder="주소를 입력해 주세요"
-          className="mb-3 w-full rounded border px-3 py-3"
-        />
-        <button
-          type="button"
-          onClick={handleCurrentLocation}
-          className="absolute top-[40%] right-2 -translate-y-1/2 cursor-pointer"
-        >
-          <Image
-            src="/icons/ic_my_location.svg"
-            alt="현재 위치"
-            width={30}
-            height={30}
+      <div className="hidden md:block">
+        <div className="relative mb-3">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSelectedAddress("");
+            }}
+            placeholder="주소를 입력해 주세요"
+            className="mb-3 w-full rounded border px-3 py-3"
           />
-        </button>
+          <button
+            type="button"
+            onClick={handleCurrentLocation}
+            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
+          >
+            <Image
+              src="/icons/ic_my_location.svg"
+              alt="현재 위치"
+              width={30}
+              height={30}
+            />
+          </button>
+        </div>
+
+        <ul className="max-h-60 space-y-3 overflow-y-auto">
+          {results.map((item, idx) => {
+            const road = item.road_address?.address_name;
+            const building = item.road_address?.building_name;
+            const jibun = item.address?.address_name;
+            const fullRoad = building ? `${road} (${building})` : road;
+
+            return (
+              <li
+                key={idx}
+                onClick={() => handleSelect(item)}
+                className={`cursor-pointer rounded-lg border p-3 hover:bg-gray-50 ${
+                  selectedAddress === (fullRoad || jibun)
+                    ? "border-red-500 bg-red-100"
+                    : ""
+                }`}
+              >
+                <p className="text-sm font-semibold">
+                  {item.road_address?.zone_no}
+                </p>
+                {road && (
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-4xl bg-red-200 px-3 py-1 text-xs text-red-600">
+                      도로명
+                    </span>
+                    <span className="text-sm">{fullRoad}</span>
+                  </div>
+                )}
+                {jibun && (
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="rounded-4xl bg-red-200 px-4 py-1 text-xs text-red-600">
+                      지번
+                    </span>
+                    <span className="text-sm">{jibun}</span>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      <ul className="max-h-60 space-y-3 overflow-y-auto">
-        {results.map((item, idx) => {
-          const road = item.road_address?.address_name;
-          const building = item.road_address?.building_name;
-          const jibun = item.address?.address_name;
+      <div className="block overflow-x-hidden md:hidden">
+        <div className="mx-auto w-full px-4">
+          <div className="sticky top-0 z-10 mb-3 bg-white pt-1 pb-3">
+            <div className="relative">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setSelectedAddress("");
+                }}
+                placeholder="주소를 입력해 주세요"
+                className="w-full rounded border px-3 py-3"
+              />
+              <button
+                type="button"
+                onClick={handleCurrentLocation}
+                className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
+              >
+                <Image
+                  src="/icons/ic_my_location.svg"
+                  alt="현재 위치"
+                  width={30}
+                  height={30}
+                />
+              </button>
+            </div>
+          </div>
 
-          const fullRoad = building ? `${road} (${building})` : road;
+          <ul className="/* 약 3~4개 정도 표시 */ max-h-[232px] touch-pan-y space-y-3 overflow-y-auto overscroll-contain pr-1">
+            {results.map((item, idx) => {
+              const road = item.road_address?.address_name;
+              const building = item.road_address?.building_name;
+              const jibun = item.address?.address_name;
+              const fullRoad = building ? `${road} (${building})` : road;
 
-          return (
-            <li
-              key={idx}
-              onClick={() => handleSelect(item)}
-              className={`cursor-pointer rounded-lg border p-3 hover:bg-gray-50 ${
-                selectedAddress === (fullRoad || jibun)
-                  ? "border-red-500 bg-red-100"
-                  : ""
-              }`}
-            >
-              <p className="text-sm font-semibold">
-                {item.road_address?.zone_no}
-              </p>
+              return (
+                <li
+                  key={idx}
+                  onClick={() => handleSelect(item)}
+                  className={`cursor-pointer rounded-lg border p-3 hover:bg-gray-50 ${
+                    selectedAddress === (fullRoad || jibun)
+                      ? "border-red-500 bg-red-100"
+                      : ""
+                  }`}
+                >
+                  <p className="text-sm font-semibold">
+                    {item.road_address?.zone_no}
+                  </p>
 
-              {road && (
-                <div className="flex items-center gap-2">
-                  <span className="rounded-4xl bg-red-200 px-3 py-1 text-xs whitespace-nowrap text-red-600">
-                    도로명
-                  </span>
-                  <span className="text-sm">{fullRoad}</span>
-                </div>
-              )}
+                  {road && (
+                    <div className="mt-1 flex min-w-0 items-center gap-2">
+                      <span className="rounded-4xl bg-red-200 px-3 py-1 text-xs text-red-600">
+                        도로명
+                      </span>
+                      <span className="text-sm break-words">{fullRoad}</span>
+                    </div>
+                  )}
 
-              {jibun && (
-                <div className="mt-1 flex items-center gap-2">
-                  <span className="rounded-4xl bg-red-200 px-4 py-1 text-xs whitespace-nowrap text-red-600">
-                    지번
-                  </span>
-                  <span className="text-sm">{jibun}</span>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                  {jibun && (
+                    <div className="mt-1 flex min-w-0 items-center gap-2">
+                      <span className="rounded-4xl bg-red-200 px-4 py-1 text-xs text-red-600">
+                        지번
+                      </span>
+                      <span className="text-sm break-words">{jibun}</span>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
     </BaseModal>
   );
 }
