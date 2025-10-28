@@ -115,6 +115,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
                 q={q}
                 onConfirm={() => confirm(q.id)}
                 confirming={confirming}
+                requestId={Number(requestId)}
               />
             ))}
       </div>

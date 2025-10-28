@@ -45,6 +45,7 @@ const fmtDate = (iso?: string) =>
 export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
   console.log("[quote detail]", detail);
   const mr = detail.moveRequest;
+  if (!mr) return null; // 우진수정 mr null가드
   const svc = svcMap[mr.serviceType];
   const typ = typeMap[detail.type];
 

@@ -51,6 +51,7 @@ export default function TestPage() {
           { label: "소형 이사", iconSrc: "/icons/ic_box.svg" },
           { label: "지정 견적 요청", iconSrc: "/icons/ic_document.svg" },
         ]}
+        onConfirm={async () => {}}
       />
 
       <SendEstimateModal
@@ -67,6 +68,7 @@ export default function TestPage() {
           { label: "소형 이사", iconSrc: "/icons/ic_box.svg" },
           { label: "지정 견적 요청", iconSrc: "/icons/ic_document.svg" },
         ]}
+        moveRequestId={123}
       />
       <ReceivedRequestCard
         customerName="이름"
@@ -89,6 +91,7 @@ export default function TestPage() {
         careerYears={7}
         confirmedCount={334}
         className="mt-6 ml-8"
+        introduction={"안전하게 모시겠습니다"}
       />
 
       <CustomerEstimateCard
@@ -115,6 +118,7 @@ export default function TestPage() {
         requestType="지정 견적 요청"
         price={180000}
         className="mt-4 ml-8"
+        quoteId={123}
       />
 
       <RejectedRequestCard
@@ -141,6 +145,7 @@ export default function TestPage() {
         moveType="소형이사"
         requestType="지정 견적 요청"
         className="mt-4 ml-8"
+        comment="test Comment"
       />
 
       <EstimateHistoryCard
