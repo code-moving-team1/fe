@@ -1,0 +1,9 @@
+{
+  "eslint.enable": true,
+  "eslint.useFlatConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.run": "onType",
+  "editor.formatOnSave": false
+}
