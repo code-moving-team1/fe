@@ -576,8 +576,8 @@ export default function SentEstimatesPage() {
                       ) : isCompleted ? (
                         <CompletedMoveCard
                           {...baseProps}
-                          quoteId={item.quoteId}
-                          // {...(item.quoteId ? { quoteId: item.quoteId } : {})}
+                          // quoteId={item.quoteId}
+                          {...(item.quoteId ? { quoteId: item.quoteId } : {})}
                           chips={chips}
                           className="h-[285px] border border-gray-200 bg-white"
                         />
