@@ -19,13 +19,13 @@ export default function MoverProfilePage() {
       <p>이메일: {me.email}</p>
       <p>전화번호: {me.phone}</p>
       <p>닉네임: {me.nickname}</p>
-      <p>경력: {me.career}</p>
+      {/* <p>경력: {me.career}</p>
       <p>자기소개: {me.introduction}</p>
       <p>설명: {me.description}</p>
       <p>
         평점: {me.averageRating} ({me.totalReviews} 리뷰)
       </p>
-      <p>서비스 유형: {me.moverServiceTypes?.join(", ")}</p>
+      <p>서비스 유형: {me.moverServiceTypes?.join(", ")}</p> */}
     </div>
   );
 }

@@ -19,9 +19,9 @@ export default function CustomerProfilePage() {
       <h1 className="mb-4 text-xl font-bold">ReactQuery 고객 프로필</h1>
       <p>이메일: {me.email}</p>
       <p>전화번호: {me.phone}</p>
-      <p>지역: {me.region}</p>
-      <p>가입일: {new Date(me.createdAt).toLocaleDateString()}</p>
-      <p>서비스 유형: {me.customerServiceTypes?.join(", ")}</p>
+      {/* <p>지역: {me.region}</p> */}
+      {/* <p>가입일: {new Date(me.createdAt).toLocaleDateString()}</p> */}
+      {/* <p>서비스 유형: {me.customerServiceTypes?.join(", ")}</p> */}
     </div>
   );
 }
