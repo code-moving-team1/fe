@@ -16,7 +16,7 @@ type QuoteStatus = "PENDING" | "REJECTED" | "ACCEPTED";
 
 export type QuoteItem = {
   id: number;
-  quoteId: number;
+  quoteId?: number;
   price: number;
   status: QuoteStatus;
   type?: "NORMAL" | "DIRECT";
@@ -205,8 +205,17 @@ export default function SentEstimatesPage() {
     quotesQ.isFetchingNextPage ||
     (active === "rejected" && directsQ.isFetchingNextPage);
 
+  // const quotesRawA: QuoteItem[] =
+  //   quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
+
   const quotesRawA: QuoteItem[] =
-    quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
+    quotesQ.data?.pages.flatMap((p: any) =>
+      (p.data ?? []).map((q: any) => ({
+        ...q,
+        // 일반 견적은 q.id가 곧 견적ID
+        quoteId: q.id, // ✅ 보정
+      })),
+    ) ?? [];
 
   const quotesRawB: QuoteItem[] =
     (active === "rejected"
@@ -568,6 +577,7 @@ export default function SentEstimatesPage() {
                         <CompletedMoveCard
                           {...baseProps}
                           quoteId={item.quoteId}
+                          // {...(item.quoteId ? { quoteId: item.quoteId } : {})}
                           chips={chips}
                           className="h-[285px] border border-gray-200 bg-white"
                         />
