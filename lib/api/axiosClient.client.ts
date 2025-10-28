@@ -1,6 +1,6 @@
 // lib/api/axiosClient.ts
 import { useAuthStore } from "@/contexts/authStore";
-import axios from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { AUTH_API } from "./paths";
 
 const clientApi = axios.create({
@@ -15,13 +15,17 @@ const clientApi = axios.create({
 let isRefreshing = false; // 지금 토큰 갱신중인지
 // 이미 갱신 요청이 진행중이면 다른 요청들은 그 Promise를 기다리도록
 // 여러 api 요청이 401 unauthorized 에러코드 맞아도 refresh 요청은 한번만 보내도록
-let refreshPromise: Promise<any> | null = null;
+
+let refreshPromise: Promise<AxiosResponse<unknown>> | null = null;
+// refresh 응답 바디를 (현재 코드에선) 안 쓰므로 unknown으로 두는 게 안전
 
 clientApi.interceptors.response.use(
   (res) => res,
   async (error) => {
     // let isRefreshing = false;
-    const originalRequest = error.config as any;
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
     //401이면 토큰만료일것으로 판단하고 refresh 실행
     if (error.response?.status === 401 && !originalRequest._retry) {
       //같은 요청을 무한반복하지 않도록 플래그
@@ -71,7 +75,6 @@ clientApi.interceptors.response.use(
 
       //refresh 성공시 원래요청 다시 실행 해서 중단없이 api 성공한것처럼 ㄱㄱ함
       return clientApi(originalRequest); // 원래요청 재시도
-
     }
     return Promise.reject(error);
   },
