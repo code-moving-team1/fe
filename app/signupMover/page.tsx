@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import {
   validateName,
@@ -11,26 +12,29 @@ import {
 } from "../signupUser/validation";
 
 type Form = {
-  username?: string;
+  name?: string;
   email?: string;
   phone?: string;
   password?: string;
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword" 
+type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword" 
 
 
 export default function SignupMoverPage() {
+  const router = useRouter(); 
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState<Form>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -38,7 +42,7 @@ export default function SignupMoverPage() {
 
     let errorMsg = "";
     switch (id) {
-      case "username":
+      case "name":
         errorMsg = validateName(value);
         break;
       case "email":
@@ -68,7 +72,7 @@ export default function SignupMoverPage() {
     e.preventDefault();
 
     const newErrors = {
-      username: validateName(form.username),
+      name: validateName(form.name),
       email: validateEmail(form.email),
       phone: validatePhone(form.phone),
       password: validatePassword(form.password),
@@ -85,9 +89,42 @@ export default function SignupMoverPage() {
 
     console.log("기사 회원가입 성공 🎉", form);
   };
-  const isFormFilled = Object.values(form).every((val) => val.trim() !== "");
-  const isFormValid = Object.values(errors).every((msg) => !msg);
+  const handleSignup = async () => {
+    setErrorMessage("");
+    setLoading(true);
+    try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/customer/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }),
+    }) 
+
+    const data = await res.json();
+   if (!res.ok) {
+      setErrorMessage(data?.message || "회원가입에 실패했습니다.");
+      } else {
+      router.push("/login/customer");
+      }
+      } catch (err) {
+      setErrorMessage("서버와 연결할 수 없습니다.");
+      } finally {
+      setLoading(false);
+      }
+
+};
+
+  //버튼 활성화 조건: 모든 필드 채워짐 + 에러 없음
+  const isFormFilled = Object.values(form).every((val) => val.trim() !== "") 
+  const isFormValid = Object.values(errors).every((msg) => !msg); 
   const canSubmit = isFormFilled && isFormValid;
+
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
@@ -117,7 +154,7 @@ export default function SignupMoverPage() {
               <div className="mx-auto flex w-full flex-col gap-[32px]">
                 {[
                   {
-                    id: "username",
+                    id: "name",
                     label: "이름",
                     placeholder: "성함을 입력해 주세요",
                     type: "text",
@@ -166,16 +203,16 @@ export default function SignupMoverPage() {
                 ))}
               </div>
 
-              <button
-                type="submit"
-                disabled={!canSubmit}
+               {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
+              <button onClick={handleSignup} disabled={!canSubmit || loading} 
+                type="submit" 
                 className={`className="w-full " cursor-pointer rounded-[16px] p-[14px] font-semibold ${
                   canSubmit
                     ? "cursor-pointer bg-[#F9502E] text-[#FFFFFF]"
                     : "cursor-not-allowed bg-[#D9D9D9] text-[#FFFFFF]"
                 }`}
               >
-                시작하기
+                {loading ? "로딩 중..." : "시작하기"}
               </button>
             </form>
 
