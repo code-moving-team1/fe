@@ -16,7 +16,7 @@ type QuoteStatus = "PENDING" | "REJECTED" | "ACCEPTED";
 
 export type QuoteItem = {
   id: number;
-  quoteId: number;
+  quoteId?: number;
   price: number;
   status: QuoteStatus;
   type?: "NORMAL" | "DIRECT";
@@ -205,9 +205,65 @@ export default function SentEstimatesPage() {
     quotesQ.isFetchingNextPage ||
     (active === "rejected" && directsQ.isFetchingNextPage);
 
+  // const quotesRawA: QuoteItem[] =
+  //   quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
   const quotesRawA: QuoteItem[] =
-    quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
+    quotesQ.data?.pages.flatMap((p: any) =>
+      (p.data ?? []).map((q: any) => ({
+        ...q,
+        quoteId: q.quoteId, // ✅ 보정
+      })),
+    ) ?? [];
 
+  // const quotesRawB: QuoteItem[] =
+  //   (active === "rejected"
+  //     ? directsQ.data?.pages.flatMap((p: any) => {
+  //         const rows: any[] = Array.isArray(p) ? p : (p?.data ?? []);
+  //         return rows.map((q) => {
+  //           const moveReq = q.moveRequest ?? q.move_request ?? {};
+  //           const statusFromApi =
+  //             q.status ??
+  //             q.direct_request_status ??
+  //             q.quoteStatus ??
+  //             "REJECTED";
+
+  //           return {
+  //             id: q.id ?? moveReq.id,
+  //             price: q.price ?? 0,
+  //             status: statusFromApi as QuoteStatus,
+  //             type: "DIRECT" as const,
+  //             createdAt:
+  //               q.createdAt ??
+  //               q.updatedAt ??
+  //               moveReq.updatedAt ??
+  //               moveReq.createdAt ??
+  //               "",
+  //             moveRequest: {
+  //               id: moveReq.id,
+  //               customerName:
+  //                 moveReq.customerName ?? moveReq.customer_name ?? null,
+  //               departure:
+  //                 moveReq.departure ??
+  //                 moveReq.departureAddress ??
+  //                 moveReq.departure_region ??
+  //                 moveReq.departureRegion ??
+  //                 "",
+  //               destination:
+  //                 moveReq.destination ??
+  //                 moveReq.destinationAddress ??
+  //                 moveReq.destination_region ??
+  //                 moveReq.destinationRegion ??
+  //                 "",
+  //               moveDate: moveReq.moveDate ?? moveReq.move_date ?? "",
+  //               serviceType: moveReq.serviceType ?? moveReq.service_type,
+  //               status: moveReq.status,
+  //             },
+  //           };
+  //         });
+  //       })
+  //     : []) ?? [];
+
+  // 지정요청(반려 탭 등)
   const quotesRawB: QuoteItem[] =
     (active === "rejected"
       ? directsQ.data?.pages.flatMap((p: any) => {
@@ -220,11 +276,17 @@ export default function SentEstimatesPage() {
               q.quoteStatus ??
               "REJECTED";
 
-            return {
-              id: q.id ?? moveReq.id,
+            // 서버 포맷에 따라 실제 '견적'이 존재할 때만 채움
+            const maybeQuoteId = q.quoteId ?? q.quote_id ?? undefined;
+
+            const obj: QuoteItem = {
+              // id: q.id ?? moveReq.id,
+              id: q.quoteId ?? moveReq.id,
+              // ✅ 있으면만: optional이므로 없어도 됨
+              ...(maybeQuoteId ? { quoteId: maybeQuoteId } : {}),
               price: q.price ?? 0,
-              status: statusFromApi as QuoteStatus,
-              type: "DIRECT" as const,
+              status: statusFromApi as QuoteItem["status"],
+              type: "DIRECT",
               createdAt:
                 q.createdAt ??
                 q.updatedAt ??
@@ -252,6 +314,7 @@ export default function SentEstimatesPage() {
                 status: moveReq.status,
               },
             };
+            return obj;
           });
         })
       : []) ?? [];
@@ -271,7 +334,7 @@ export default function SentEstimatesPage() {
     serviceType: q.moveRequest.serviceType,
     moveRequestStatus: q.moveRequest.status,
     myQuote: {
-      id: q.quoteId,
+      myQuoteId: q.quoteId,
       price: q.price,
       status: q.status,
       type: q.type ?? "NORMAL",
@@ -555,7 +618,8 @@ export default function SentEstimatesPage() {
                     moveType: serviceLabel,
                     price: item.myQuote?.price ?? 0,
                   };
-
+                  // console.log(item.id);
+                  // console.log(item.myQuote.myQuoteId);
                   return (
                     <li key={item.id}>
                       {isRejected ? (
@@ -567,7 +631,9 @@ export default function SentEstimatesPage() {
                       ) : isCompleted ? (
                         <CompletedMoveCard
                           {...baseProps}
-                          quoteId={item.quoteId}
+                          // quoteId={item.quoteId}
+                          // ✅ quoteId가 있을 때만 넘김
+                          {...(item.quoteId ? { quoteId: item.quoteId } : {})}
                           chips={chips}
                           className="h-[285px] border border-gray-200 bg-white"
                         />

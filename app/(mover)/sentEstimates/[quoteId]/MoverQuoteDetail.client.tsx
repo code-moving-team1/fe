@@ -1,3 +1,4 @@
+// app/(mover)/sentEstimates/[quoteId]/MoverQuoteDetail.client.tsx
 "use client";
 
 import EstimateStatus from "@/components/common/card/EstimateStatus";
@@ -45,6 +46,7 @@ const fmtDate = (iso?: string) =>
 export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
   console.log("[quote detail]", detail);
   const mr = detail.moveRequest;
+  if (!mr) return null; // 혹은 적절한 fallback UI
   const svc = svcMap[mr.serviceType];
   const typ = typeMap[detail.type];
 

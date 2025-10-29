@@ -1,3 +1,4 @@
+// components/common/card/CompletedMoveCard.tsx
 import CustomerEstimateCard from "./CustomerEstimateCard";
 import { Buttons } from "../button";
 import Link from "next/link";
@@ -15,7 +16,7 @@ interface CompletedMoveCardProps {
     label: string;
     iconSrc: string;
   }[];
-  quoteId: number | null;
+  quoteId?: number | null;
 }
 
 export default function CompletedMoveCard({
@@ -30,6 +31,7 @@ export default function CompletedMoveCard({
   chips,
   quoteId,
 }: CompletedMoveCardProps) {
+  const href = quoteId ? `/sentEstimates/${quoteId}` : "#";
   return (
     <CustomerEstimateCard
       customerName={customerName}
@@ -44,12 +46,14 @@ export default function CompletedMoveCard({
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 rounded-xl bg-black/50 text-white">
         <p className="text-lg font-semibold">채택된 견적이에요</p>
-        <Link href={`/sentEstimates/${quoteId}`}>
+        <Link href={href} prefetch={false} aria-disabled={!quoteId}>
+        {/* <Link href={`/sentEstimates/${quoteId}`}> */}
           <Buttons
             variant="outline"
             size="figma"
             state="active"
             className="rounded-lg border border-red-400 bg-white px-4 py-2 text-red-500"
+            disabled={!quoteId}
           >
             견적 상세보기
           </Buttons>
