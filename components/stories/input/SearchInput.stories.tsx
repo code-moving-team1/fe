@@ -11,28 +11,24 @@ const meta: Meta<typeof SearchInput> = {
       description: {
         component: `
 어디서 사용하나
-- 지역 검색, 후기 검색, 견적 요청 검색 등 **입력 후 검색 동작이 필요한 페이지**에서 사용합니다.
-- 예: '이사업체 검색', '보낸 견적 내 검색', '리뷰 목록 검색' 등의 필드에 적합합니다.
+- **기사님 찾기 페이지**: 검색창을 통해 이사업체(기사님)를 이름을 찾을 때 사용합니다.
+- **견적 요청 페이지**: 출발지와 도착지를 입력받아 주소 검색 및 자동완성 기능과 함께 사용합니다.
+- **받은 요청 페이지**: 요청 목록을 검색하거나 필터링할 때 사용합니다.
 
 어떻게 사용하나
 - placeholder, onSearch, onChange 등의 props를 통해 검색 입력창을 제어합니다.
-- Enter 키나 검색 아이콘 클릭 시 onSearch(value)가 호출됩니다.
-- 초기화 아이콘을 통해 입력 내용을 한 번에 지울 수 있습니다.
+- Enter 키 입력 또는 검색 아이콘 클릭 시 onSearch(value)가 호출되어 검색을 실행합니다.
+- 초기화 아이콘을 눌러 입력 내용을 즉시 지울 수 있습니다.
 
 사용 예시
-- SearchInput placeholder="검색어를 입력하세요"
-- SearchInput placeholder="지역을 입력하세요" onSearch={(v) => alert("검색 실행: " + v)}
+- SearchInput placeholder="이사업체 이름을 검색하세요"
+- SearchInput placeholder="출발지를 입력하세요" onSearch={(v) => alert("검색 실행: " + v)}
 
 특징
-- TailwindCSS 기반으로 border, background 등 커스터마이징 가능
+- TailwindCSS 기반으로 border, background 등 자유롭게 커스터마이징 가능
 - 검색 및 초기화 아이콘 포함
-- props로 스타일 클래스 추가 가능 (className)
-- 입력값 변경, 검색 이벤트 모두 외부에서 제어 가능
-
-접근성
-- input 요소에 label 연결 또는 aria-label 제공 가능
-- 키보드 Enter 입력 시 검색 기능 동작
-- focus 시 명확한 outline으로 시각적 피드백 제공
+- 외부에서 onSearch, onChange 이벤트를 제어할 수 있음
+- 다양한 페이지에서 동일한 UX로 일관된 검색 경험 제공
         `,
       },
     },

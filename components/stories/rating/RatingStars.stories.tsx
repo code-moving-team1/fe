@@ -11,8 +11,8 @@ const meta: Meta<typeof RatingStars> = {
     docs: {
       description: {
         component: `
-별점 선택 컴포넌트.  
-마우스 hover, 클릭, 키보드(←/→/↑/↓)로 제어할 수 있으며 \`readOnly\` 모드도 지원합니다.
+별점 선택 컴포넌트   
+마우스 hover, 클릭 으로 제어할 수 있다
         `,
       },
     },

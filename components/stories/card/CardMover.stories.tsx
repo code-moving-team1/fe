@@ -33,7 +33,7 @@ export const Default: Story = {
       careerYears={20}
       confirmedCount={340}
       likeCount={52}
-      services={["가정이사", "사무실이사"]}
+      services={["가정이사"]}
     />
   ),
 };

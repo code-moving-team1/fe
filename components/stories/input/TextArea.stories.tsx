@@ -12,24 +12,23 @@ const meta: Meta<typeof TextArea> = {
       description: {
         component: `
 어디서 사용하나
-- 견적 요청 폼, 리뷰 작성, 프로필 소개 등 여러 줄의 텍스트 입력이 필요한 페이지에서 사용합니다.
-- "추가 요청사항"이나 "상세 설명" 같은 필드에 적합합니다.
+- **받은 요청 페이지**: 이사 요청에 대한 추가 메모나 요청사항을 입력할 때 사용합니다.
+- **작성 가능한 리뷰 페이지**: 이사업체 이용 후 리뷰 내용을 작성할 때 사용합니다.
+- 여러 줄의 텍스트 입력이 필요한 모든 상황(예: 상세 설명, 의견 작성)에 적합합니다.
 
 어떻게 사용하나
 - label, placeholder, value, onChange 등의 props를 받아 제어형 컴포넌트로 동작합니다.
-- react-hook-form 같은 폼 라이브러리와 함께 사용할 수 있습니다.
+- react-hook-form 같은 폼 라이브러리와 함께 연결하여 사용할 수 있습니다.
+- 작성 중 입력값은 부모 상태 또는 form 라이브러리에서 관리합니다.
 
 사용 예시
-- TextArea id="review" label="리뷰 작성" placeholder="의견을 입력하세요" value={text} onChange={(e) => setText(e.target.value)}
+- TextArea id="review" label="리뷰 작성" placeholder="이사 서비스에 대한 의견을 입력하세요" value={text} onChange={(e) => setText(e.target.value)}
 
 특징
-- TailwindCSS 기반으로 크기, padding, border 색상 등을 커스터마이징할 수 있습니다.
-- 자동 높이 조절(autogrow) 기능이 없다면 CSS로 수동 조절 가능합니다.
-- 시각적 비활성화 상태 표현: opacity, pointer-events-none 등으로 처리 가능합니다.
-
-접근성
-- label 과 textarea 의 id 연결로 스크린리더를 지원합니다.
-- aria-disabled 또는 readOnly 상태에서 읽기 전용으로 표시할 수 있습니다.
+- TailwindCSS 기반으로 border, 색상, 높이 등 자유롭게 커스터마이징 가능
+- autogrow 기능이 없는 경우 CSS 또는 resize 속성으로 높이 조정 가능
+- 비활성 상태는 opacity, pointer-events-none 등 시각적 표현으로 처리 가능
+- form 구성 요소로 쉽게 재사용 가능
         `,
       },
     },

@@ -9,8 +9,7 @@ const meta: Meta<typeof Card> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "기본 카드 컴포넌트입니다. 자식(children)을 감싸서 흰색 배경, radius, padding, border 등을 제공합니다.",
+        component: "기본 카드 컴포넌트입니다.",
       },
     },
   },
