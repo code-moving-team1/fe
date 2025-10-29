@@ -6,8 +6,8 @@ import type {
 } from "../moverSearchApi";
 
 const BASE =
-  process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "") ??
-  "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ??
+  "http://localhost:4000/api";
 
 export const moverHttpApi: MoverApi = {
   async getMoverList(params: MoverListParams): Promise<MoverListPage> {
