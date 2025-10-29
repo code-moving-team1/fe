@@ -115,6 +115,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
                 q={q}
                 onConfirm={() => confirm(q.id)}
                 confirming={confirming}
+                requestId={Number(requestId)}
               />
             ))}
       </div>
@@ -143,7 +144,7 @@ function QuoteCard({
   q: QuoteWithMover;
   onConfirm: () => void;
   confirming: boolean;
-  requestId: number;
+  requestId?: number;
 }) {
   const router = useRouter();
   const m = q.mover;

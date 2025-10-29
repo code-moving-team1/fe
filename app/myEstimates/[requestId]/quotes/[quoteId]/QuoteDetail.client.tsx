@@ -24,7 +24,7 @@ type Detail = {
     career: string;
     averageRating: number;
     totalReviews: number;
-    confirmedCount: number;
+    confirmedCount?: number;
     img: string;
     _count?: { likes: number };
   };
