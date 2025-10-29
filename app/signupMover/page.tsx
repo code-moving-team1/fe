@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
-import {
-  validateName,validateEmail,validatePhone,validatePassword,validateConfirmPassword,
-} from "../signupCustomer/validation";
+import { validateName,validateEmail,validatePhone,validatePassword,validateConfirmPassword,} from "../signupCustomer/validation";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 
@@ -230,7 +228,7 @@ export default function SignupMoverPage() {
             <p>SNS 계정으로 간편 가입 하기</p>
             <div className="mx-auto flex flex-row gap-2">
               <SnsLoginButton provider="google"
-              onClick={() => handleSnsLoginClick("google")}></SnsLoginButton>
+              onClick={() => handleSnsLoginClick("google")}/>
               <SnsLoginButton
                 provider="kakao"
                 onClick={() => handleSnsLoginClick("kakao")}
