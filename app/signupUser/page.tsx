@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState,} from "react";
 import {
   validateName,
   validateEmail,
@@ -11,25 +12,37 @@ import {
 } from "./validation";
 
 type Form = {
-  username?: string;
+  name?: string;
   email?: string;
   phone?: string;
   password?: string;
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword";
+type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword"
 
 export default function SignupUserPage() {
+
+const router = useRouter(); 
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState<Form>({});
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [errors, setErrors] = useState<Form>({ 
+    name: "", 
+    email: "", 
+    phone: "", 
+    password: "", 
+    confirmPassword: "" });
+
+  const [loading, setLoading] = useState(false);
+
   // 입력 값 변경 시 처리 + 실시간 검증
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -38,7 +51,7 @@ export default function SignupUserPage() {
     // 실시간 유효성 검사
     let errorMsg = "";
     switch (id) {
-      case "username":
+      case "name":
         errorMsg = validateName(value);
         break;
       case "email":
@@ -69,7 +82,7 @@ export default function SignupUserPage() {
     e.preventDefault();
 
     const newErrors = {
-      username: validateName(form.username),
+      name: validateName(form.name),
       email: validateEmail(form.email),
       phone: validatePhone(form.phone),
       password: validatePassword(form.password),
@@ -87,12 +100,42 @@ export default function SignupUserPage() {
     console.log("회원가입 성공 🎉", form);
   };
 
-  // 모든 값 채움 여부
-  const isFormFilled = Object.values(form).every((val) => val.trim() !== "");
-  // 모든 에러 없음
-  const isFormValid = Object.values(errors).every((msg) => !msg);
-  // 버튼 활성화 조건
+  const handleSignup = async () => {
+    setErrorMessage("");
+    setLoading(true);
+    try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/customer/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }),
+    }) 
+
+    const data = await res.json();
+   if (!res.ok) {
+      setErrorMessage(data?.message || "회원가입에 실패했습니다.");
+      } else {
+      router.push("/login/customer");
+      }
+      } catch (err) {
+      setErrorMessage("서버와 연결할 수 없습니다.");
+      } finally {
+      setLoading(false);
+      }
+
+};
+
+  //버튼 활성화 조건: 모든 필드 채워짐 + 에러 없음
+  const isFormFilled = Object.values(form).every((val) => val.trim() !== "") 
+  const isFormValid = Object.values(errors).every((msg) => !msg); 
   const canSubmit = isFormFilled && isFormValid;
+
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
@@ -125,7 +168,7 @@ export default function SignupUserPage() {
               <div className="mx-auto flex w-full flex-col gap-[32px]">
                 {[
                   {
-                    id: "username",
+                    id: "name",
                     label: "이름",
                     placeholder: "성함을 입력해 주세요",
                     type: "text",
@@ -175,17 +218,16 @@ export default function SignupUserPage() {
                   </div>
                 ))}
               </div>
-
-              <button
-                type="submit"
-                disabled={!canSubmit}
+                {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
+              <button onClick={handleSignup} disabled={!canSubmit || loading} 
+                type="submit" 
                 className={`className="w-full " cursor-pointer rounded-[16px] p-[14px] font-semibold ${
                   canSubmit
                     ? "cursor-pointer bg-[#F9502E] text-[#FFFFFF]"
                     : "cursor-not-allowed bg-[#D9D9D9] text-[#FFFFFF]"
                 }`}
               >
-                시작하기
+                {loading ? "로딩 중..." : "시작하기"}
               </button>
             </form>
 
