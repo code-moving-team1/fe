@@ -1,3 +1,4 @@
+// app/myEstimates/[requestId]/quotes/[quoteId]/page.tsx
 import { cookies } from "next/headers";
 import { getQuoteDetailServer } from "@/lib/quoteApi";
 import QuoteDetailClient from "./QuoteDetail.client";

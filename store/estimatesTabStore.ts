@@ -1,5 +1,6 @@
+// store/estimatesTabStore.ts
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export type TabValue = "active" | "confirmed" | "expired";
 
@@ -18,8 +19,12 @@ export const useEstimatesTabStore = create<State>()(
     }),
     {
       name: "estimates-tab",
-      getStorage: () =>
-        typeof window !== "undefined" ? sessionStorage : undefined,
+      // v5 방식: getStorage 대신 storage + createJSONStorage
+      storage: createJSONStorage(() => sessionStorage),
+
+      // 아래는 zustand v4방식
+      // getStorage: () =>
+      //   typeof window !== "undefined" ? sessionStorage : undefined,
     },
   ),
 );

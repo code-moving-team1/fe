@@ -81,6 +81,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
   const items = data ?? [];
   const hasAccepted = items.some((q) => q.status === "ACCEPTED");
   const mr = mrFromCache;
+  if (!mr) return null;
   const svc = serviceChipMap[mr.serviceType];
 
   return (

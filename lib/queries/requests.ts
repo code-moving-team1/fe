@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -91,7 +92,8 @@ export function useDirectRequests(params?: {
       };
     },
     staleTime: 30_000,
-    keepPreviousData: true,
+    // keepPreviousData: true,
+    placeholderData: keepPreviousData, // ✅ v5 방식
     enabled,
   });
 }

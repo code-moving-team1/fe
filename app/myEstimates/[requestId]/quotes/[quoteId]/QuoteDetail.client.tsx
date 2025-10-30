@@ -1,3 +1,4 @@
+// app/myEstimates/[requestId]/quotes/[quoteId]/QuoteDetail.client.tsx
 "use client";
 
 import Image from "next/image";
@@ -21,13 +22,14 @@ type Detail = {
   mover?: {
     id: number;
     nickname: string;
-    career: string;
-    averageRating: number;
-    totalReviews: number;
-    confirmedCount?: number;
-    img: string;
-    _count?: { likes: number };
-  };
+    // API에서 null/undefined로 올 수 있으니 선택 + nullable
+    career?: string | number | null;
+    averageRating?: number | null;
+    totalReviews?: number | null;
+    confirmedCount?: number; // 없을 수 있음 → 그대로 optional
+    img?: string | null;
+    _count?: { likes?: number };
+  } | null;
   moveRequest?: {
     serviceType: ServiceType;
     departure: string;
@@ -132,10 +134,10 @@ export default function QuoteDetailClient({
           <div className="mt-2 flex items-center gap-3 text-[18px] text-zinc-600 sm:text-[24px]">
             <MoverName MoverName={m?.nickname} />
             <MoverStats
-              rating={m?.averageRating}
-              reviewCount={m?.totalReviews}
+              rating={m?.averageRating ?? 0}
+              reviewCount={m?.totalReviews ?? 0}
               careerYears={careerYears}
-              confirmedCount={m?.confirmedCount}
+              confirmedCount={m?.confirmedCount ?? 0}
               className="mt-1"
             />
           </div>

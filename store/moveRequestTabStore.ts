@@ -1,5 +1,6 @@
+// store/moveRequestTabStore.ts
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export type RequestsTab = "normal" | "direct";
 
@@ -18,8 +19,9 @@ export const useRequestsTabStore = create<State>()(
     }),
     {
       name: "requests-tab",
-      getStorage: () =>
-        typeof window !== "undefined" ? sessionStorage : undefined,
+      storage: createJSONStorage(() => sessionStorage),
+      // getStorage: () =>
+      //   typeof window !== "undefined" ? sessionStorage : undefined,
     },
   ),
 );
