@@ -668,7 +668,7 @@ function EmptyState({ active }: { active: TabKey }) {
   const desc =
     active === "sent"
       ? "내가 보낸 견적이 여기 표시됩니다."
-      : "없다구요 반려 요청";
+      : "반려 요청이 없습니다.";
   return (
     <div className="flex h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white">
       <p className="text-base font-semibold text-gray-900">{title}</p>
