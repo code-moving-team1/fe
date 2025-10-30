@@ -41,18 +41,18 @@ function pickDataSource(): DataSource {
   );
 }
 
-export async function getMoverApi(): Promise<MoverApi> {
-  const src = pickDataSource();
-  if (src === "http") {
-    const mod = await import("./http/moverHttp");
-    return mod.moverHttpApi;
-  }
-  const mod = await import("./mocks/moverMock");
-  return mod.moverMockApi;
-}
+// export async function getMoverApi(): Promise<MoverApi> {
+//   const src = pickDataSource();
+//   if (src === "http") {
+//     const mod = await import("./http/moverHttp");
+//     return mod.moverHttpApi;
+//   }
+//   const mod = await import("./mocks/moverMock");
+//   return mod.moverMockApi;
+// }
 
 // 편의 함수
-export async function getMoverList(params: MoverListParams) {
-  const api = await getMoverApi();
-  return api.getMoverList(params);
-}
+// export async function getMoverList(params: MoverListParams) {
+//   const api = await getMoverApi();
+//   return api.getMoverList(params);
+// }
