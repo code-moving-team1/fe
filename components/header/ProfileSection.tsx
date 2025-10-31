@@ -68,7 +68,13 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
           className="relative"
           aria-label="알림"
         >
-          <Image src={alarmIcon} alt="알림" width={30} height={30} />
+          <Image
+            src={alarmIcon}
+            alt="알림"
+            className="mt-2 cursor-pointer"
+            width={30}
+            height={30}
+          />
           {unread > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs text-white">
               {unread > 99 ? "99+" : unread}
@@ -77,13 +83,13 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
         </button>
 
         {alarmOpen && (
-          <div className="absolute top-[calc(100%+12px)] left-1/2 z-[60] w-[92vw] max-w-[320px] -translate-x-1/2 rounded-2xl border border-gray-200 bg-white shadow-xl md:w-[360px] md:max-w-none">
+          <div className="absolute left-1/2 z-[60] mt-2 w-[92vw] max-w-[320px] -translate-x-1/2 rounded-2xl border border-gray-200 bg-white shadow-xl md:w-[360px] md:max-w-none">
             <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 md:px-5">
               <strong className="text-sm font-semibold text-gray-900 md:text-base">
                 알림
               </strong>
               <button
-                className="text-xs text-gray-400 hover:text-gray-600 md:text-sm"
+                className="cursor-pointer text-xs text-gray-400 hover:text-gray-600 md:text-sm"
                 onClick={onMarkAllRead}
               >
                 모두 읽음
@@ -124,7 +130,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
             setOpen(!open);
             setAlarmOpen(false);
           }}
-          className="flex items-center gap-2"
+          className="flex cursor-pointer items-center gap-2"
         >
           <Image src={profileIcon} alt="프로필" width={36} height={36} />
           <span className="font-bold text-black">

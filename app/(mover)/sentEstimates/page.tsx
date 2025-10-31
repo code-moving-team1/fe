@@ -205,8 +205,6 @@ export default function SentEstimatesPage() {
     quotesQ.isFetchingNextPage ||
     (active === "rejected" && directsQ.isFetchingNextPage);
 
-  // const quotesRawA: QuoteItem[] =
-  //   quotesQ.data?.pages.flatMap((p: { data: QuoteItem[] }) => p.data) ?? [];
   const quotesRawA: QuoteItem[] =
     quotesQ.data?.pages.flatMap((p: any) =>
       (p.data ?? []).map((q: any) => ({
@@ -214,54 +212,6 @@ export default function SentEstimatesPage() {
         quoteId: q.quoteId, // ✅ 보정
       })),
     ) ?? [];
-
-  // const quotesRawB: QuoteItem[] =
-  //   (active === "rejected"
-  //     ? directsQ.data?.pages.flatMap((p: any) => {
-  //         const rows: any[] = Array.isArray(p) ? p : (p?.data ?? []);
-  //         return rows.map((q) => {
-  //           const moveReq = q.moveRequest ?? q.move_request ?? {};
-  //           const statusFromApi =
-  //             q.status ??
-  //             q.direct_request_status ??
-  //             q.quoteStatus ??
-  //             "REJECTED";
-
-  //           return {
-  //             id: q.id ?? moveReq.id,
-  //             price: q.price ?? 0,
-  //             status: statusFromApi as QuoteStatus,
-  //             type: "DIRECT" as const,
-  //             createdAt:
-  //               q.createdAt ??
-  //               q.updatedAt ??
-  //               moveReq.updatedAt ??
-  //               moveReq.createdAt ??
-  //               "",
-  //             moveRequest: {
-  //               id: moveReq.id,
-  //               customerName:
-  //                 moveReq.customerName ?? moveReq.customer_name ?? null,
-  //               departure:
-  //                 moveReq.departure ??
-  //                 moveReq.departureAddress ??
-  //                 moveReq.departure_region ??
-  //                 moveReq.departureRegion ??
-  //                 "",
-  //               destination:
-  //                 moveReq.destination ??
-  //                 moveReq.destinationAddress ??
-  //                 moveReq.destination_region ??
-  //                 moveReq.destinationRegion ??
-  //                 "",
-  //               moveDate: moveReq.moveDate ?? moveReq.move_date ?? "",
-  //               serviceType: moveReq.serviceType ?? moveReq.service_type,
-  //               status: moveReq.status,
-  //             },
-  //           };
-  //         });
-  //       })
-  //     : []) ?? [];
 
   // 지정요청(반려 탭 등)
   const quotesRawB: QuoteItem[] =
@@ -276,13 +226,10 @@ export default function SentEstimatesPage() {
               q.quoteStatus ??
               "REJECTED";
 
-            // 서버 포맷에 따라 실제 '견적'이 존재할 때만 채움
             const maybeQuoteId = q.quoteId ?? q.quote_id ?? undefined;
 
             const obj: QuoteItem = {
-              // id: q.id ?? moveReq.id,
               id: q.quoteId ?? moveReq.id,
-              // ✅ 있으면만: optional이므로 없어도 됨
               ...(maybeQuoteId ? { quoteId: maybeQuoteId } : {}),
               price: q.price ?? 0,
               status: statusFromApi as QuoteItem["status"],
@@ -411,14 +358,9 @@ export default function SentEstimatesPage() {
   const applySort = (label: SortLabel) => {
     setSortLabel(label);
     setOpenSort(false);
-
-    if (label === "가격 높은순") {
-      setPriceSort("desc");
-    } else if (label === "가격 낮은순") {
-      setPriceSort("asc");
-    } else {
-      setPriceSort(null);
-    }
+    if (label === "가격 높은순") setPriceSort("desc");
+    else if (label === "가격 낮은순") setPriceSort("asc");
+    else setPriceSort(null);
   };
 
   const loadMoreRef = useInfiniteScroll(
@@ -436,6 +378,7 @@ export default function SentEstimatesPage() {
     },
     hasNextPage && mounted && isMover,
   );
+
   if (!mounted) {
     return (
       <div className={`${CONTAINER} pt-6 pb-12`}>
@@ -449,8 +392,10 @@ export default function SentEstimatesPage() {
   return (
     <>
       <div className="-mt-px border-t border-gray-200 bg-white">
-        <div className={CONTAINER}>
-          <nav className="flex gap-12">
+        <div
+          className={`${CONTAINER} flex flex-wrap items-center justify-between gap-2 py-1 md:py-0`}
+        >
+          <nav className="flex flex-wrap items-center gap-6 md:gap-10">
             {TABS.map((t) => {
               const on = active === t.key;
               return (
@@ -458,79 +403,77 @@ export default function SentEstimatesPage() {
                   key={t.key}
                   onClick={() => setActive(t.key)}
                   aria-current={on ? "page" : undefined}
-                  className={`relative cursor-pointer py-6 text-[17px] font-semibold ${
+                  className={`relative cursor-pointer py-4 text-[16px] font-semibold ${
                     on ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   <span className="relative inline-block pb-2">
                     {t.label}
                     {on && (
-                      <span className="absolute bottom-0 left-1/2 h-[2px] w-10 -translate-x-1/2 rounded-full bg-gray-900" />
+                      <span className="absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 rounded-full bg-gray-900" />
                     )}
                   </span>
                 </button>
               );
             })}
           </nav>
+
+          <div className="relative" ref={sortRef}>
+            <button
+              onClick={() => setOpenSort((v) => !v)}
+              className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold ${
+                openSort
+                  ? "border-gray-400 bg-gray-100"
+                  : "border-gray-300 bg-white"
+              }`}
+            >
+              {sortLabel}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                className={`${openSort ? "rotate-180" : ""} transition-transform`}
+              >
+                <path
+                  d="M6 9l6 6 6-6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+
+            {openSort && (
+              <ul className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+                {(
+                  [
+                    "날짜순",
+                    "오래된순",
+                    "등록 최신순",
+                    "가격 높은순",
+                    "가격 낮은순",
+                  ] as const
+                ).map((label) => (
+                  <li
+                    key={label}
+                    onClick={() => applySort(label)}
+                    className={`cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 ${
+                      sortLabel === label ? "bg-red-50 text-red-600" : ""
+                    }`}
+                  >
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
       <section className="w-full bg-gray-50">
         <div className={`${CONTAINER} pt-6 pb-12`}>
-          <div className="mb-4 flex justify-end">
-            <div className="relative" ref={sortRef}>
-              <button
-                onClick={() => setOpenSort((v) => !v)}
-                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold ${
-                  openSort
-                    ? "border-gray-400 bg-gray-100"
-                    : "border-gray-300 bg-white"
-                }`}
-              >
-                {sortLabel}
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className={`${openSort ? "rotate-180" : ""} transition-transform`}
-                >
-                  <path
-                    d="M6 9l6 6 6-6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              {openSort && (
-                <ul className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
-                  {(
-                    [
-                      "날짜순",
-                      "오래된순",
-                      "등록 최신순",
-                      "가격 높은순",
-                      "가격 낮은순",
-                    ] as const
-                  ).map((label) => (
-                    <li
-                      key={label}
-                      onClick={() => applySort(label)}
-                      className={`cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 ${
-                        sortLabel === label ? "bg-red-50 text-red-600" : ""
-                      }`}
-                    >
-                      {label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-
           {meLoading ? (
             <div className="flex h-40 flex-col items-center justify-center text-gray-500">
               <Spinner className="mb-3 h-6 w-6 border-gray-400" />{" "}
@@ -618,8 +561,7 @@ export default function SentEstimatesPage() {
                     moveType: serviceLabel,
                     price: item.myQuote?.price ?? 0,
                   };
-                  // console.log(item.id);
-                  // console.log(item.myQuote.myQuoteId);
+
                   return (
                     <li key={item.id}>
                       {isRejected ? (
@@ -631,11 +573,9 @@ export default function SentEstimatesPage() {
                       ) : isCompleted ? (
                         <CompletedMoveCard
                           {...baseProps}
-                          // quoteId={item.quoteId}
-                          // ✅ quoteId가 있을 때만 넘김
                           {...(item.quoteId ? { quoteId: item.quoteId } : {})}
                           chips={chips}
-                          className="h-[285px] border border-gray-200 bg-white"
+                          className="border border-gray-200 bg-white md:h-[285px]"
                         />
                       ) : (
                         <CustomerEstimateCard

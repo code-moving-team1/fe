@@ -36,7 +36,7 @@ export default function HeaderLayout({
             aria-controls="mobile-drawer"
             aria-expanded={open}
             onClick={() => setOpen(true)}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200 md:hidden"
+            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200 md:hidden"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path
@@ -72,7 +72,7 @@ export default function HeaderLayout({
             type="button"
             aria-label="메뉴 닫기"
             onClick={() => setOpen(false)}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200"
+            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path

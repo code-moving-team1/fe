@@ -19,21 +19,25 @@ export default function ProfileDropdown({
   const { mutate: logout } = useLogout();
   const menus: MenuItem[] = profileConfig[userType];
 
+  const marginTopClass =
+    userType === "customer" ? "mt-58 md:mt-69" : "mt-42 md:mt-49";
+
   return (
-    <div className="absolute top-full left-0 mt-2 w-45 rounded-lg border border-gray-200 bg-white shadow-lg">
-      <div className="px-4 py-4 text-sm font-bold text-gray-800">
-        {/* {me?.name ?? (userType === "mover" ? "기사" : "고객")}님 */}
+    <div
+      className={`absolute left-0 ${marginTopClass} w-30 rounded-lg border border-gray-200 bg-white shadow-lg md:w-45`}
+    >
+      <div className="px-3 py-3 text-xs font-bold text-gray-800 md:px-4 md:py-4 md:text-sm">
         {me?.name
           ? `${me.name} ${userType === "mover" ? "기사" : "고객"}님`
           : `${userType === "mover" ? "기사" : "고객"}님`}
       </div>
 
-      <ul className="text-sm text-gray-700">
+      <ul className="text-xs text-gray-700 md:text-sm">
         {menus.map(({ href, label, className }) => (
           <li key={href}>
             <Link
               href={href}
-              className={`block px-4 py-2.5 hover:bg-gray-100 ${className ?? ""}`}
+              className={`block px-3 py-2 hover:bg-gray-100 md:px-4 md:py-2.5 ${className ?? ""}`}
             >
               {label}
             </Link>
@@ -43,7 +47,7 @@ export default function ProfileDropdown({
 
       <button
         onClick={() => logout()}
-        className="w-full cursor-pointer border-t border-gray-100 px-4 py-2 text-center text-sm text-gray-400"
+        className="w-full cursor-pointer border-t border-gray-100 px-3 py-2 text-center text-xs text-gray-400 md:px-4 md:py-2 md:text-sm"
       >
         로그아웃
       </button>

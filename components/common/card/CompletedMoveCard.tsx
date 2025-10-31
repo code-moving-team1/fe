@@ -47,12 +47,11 @@ export default function CompletedMoveCard({
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 rounded-xl bg-black/50 text-white">
         <p className="text-lg font-semibold">채택된 견적이에요</p>
         <Link href={href} prefetch={false} aria-disabled={!quoteId}>
-        {/* <Link href={`/sentEstimates/${quoteId}`}> */}
           <Buttons
             variant="outline"
             size="figma"
             state="active"
-            className="rounded-lg border border-red-400 bg-white px-4 py-2 text-red-500"
+            className="cursor-pointer rounded-lg border border-red-400 bg-white px-4 py-2 text-red-500"
             disabled={!quoteId}
           >
             견적 상세보기

@@ -50,9 +50,13 @@ export default function CustomerEstimateCard({
 
       <CardHeaderCustomer customerName={customerName} />
 
-      <div className="flex justify-between text-sm font-bold">
-        <CardRouteInfo from={from} to={to} />
-        <CardDateInfo movingDate={movingDate} />
+      <div className="flex flex-col gap-2 text-sm font-bold md:flex-row md:items-start md:justify-between">
+        <div className="order-1 md:order-0">
+          <CardRouteInfo from={from} to={to} />
+        </div>
+        <div className="order-2 md:order-0">
+          <CardDateInfo movingDate={movingDate} />
+        </div>
       </div>
 
       <div className="flex items-center justify-between border-t border-gray-200 pt-3">
