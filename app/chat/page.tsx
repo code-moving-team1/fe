@@ -5,6 +5,22 @@ import { useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { getDisplayNickname } from "@/utils/getDisplayNickname";
 
+type ChatMsg = {
+  id: string;
+  name: string;
+  text: string;
+  ts: number;
+  isMe?: boolean;
+};
+
+type SystemMsg = {
+  system: true;
+  text: string;
+  ts: number;
+};
+
+type ChatItem = ChatMsg | SystemMsg;
+
 export default function ChatPage() {
   // const [nickname, setNickname] = useState(
   //   () => `user-${Math.floor(Math.random() * 9999)}`
@@ -12,9 +28,11 @@ export default function ChatPage() {
   const [nickname, setNickname] = useState("");
   const [joined, setJoined] = useState(false);
   const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<any[]>([]);
+  // const [msgs, setMsgs] = useState<ChatMsg[]>([]);
+  const [msgs, setMsgs] = useState<ChatItem[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
+  const myIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     listRef.current?.scrollTo({
@@ -52,19 +70,46 @@ export default function ChatPage() {
 
     socketRef.current = s;
 
-    s.on("chat:history", (list) => setMsgs(list));
-    s.on("chat:system", (m) =>
-      setMsgs((prev) => [...prev, { ...m, system: true }]),
-    );
-    s.on("chat:message", (m) => setMsgs((prev) => [...prev, m]));
+    s.on("connect", () => {
+      myIdRef.current = s.id ?? null; // ✅ 내 소켓 id 기억
+    });
+
+    // s.on("chat:history", (list) => setMsgs(list));
+    s.on("chat:history", (list: ChatMsg[]) => {
+      setMsgs(
+        list.map((m) => ({ ...m, isMe: m.id === (myIdRef.current ?? "") })),
+      );
+    });
+    // s.on("chat:system", (m) =>
+    //   setMsgs((prev) => [...prev, { ...m, system: true }]),
+    // );
+
+    s.on("chat:system", (m: SystemMsg) => setMsgs((prev) => [...prev, m]));
+
+    // s.on("chat:message", (m) => setMsgs((prev) => [...prev, m]));
+    s.on("chat:message", (m: ChatMsg) => {
+      setMsgs((prev) => [
+        ...prev,
+        { ...m, isMe: m.id === (myIdRef.current ?? "") },
+      ]);
+    });
+    s.on("reconnect", () => {
+      myIdRef.current = s.id ?? null;
+    });
+
     s.on("connect_error", (err) =>
       setMsgs((prev) => [
         ...prev,
+        // {
+        //   text: `연결 오류: ${err?.message ?? "unknown"}`,
+        //   ts: Date.now(),
+        //   system: true,
+        // },
         {
+          system: true,
           text: `연결 오류: ${err?.message ?? "unknown"}`,
           ts: Date.now(),
-          system: true,
-        },
+        } as SystemMsg,
       ]),
     );
 
@@ -109,8 +154,8 @@ export default function ChatPage() {
             ref={listRef}
             className="h-[60vh] w-full space-y-2 overflow-y-auto rounded border bg-white p-3"
           >
-            {msgs.map((m: any, idx: number) =>
-              m.system ? (
+            {msgs.map((m: ChatItem, idx: number) =>
+              "system" in m ? (
                 <div
                   key={`s-${idx}`}
                   className="text-center text-xs text-gray-500"
@@ -118,12 +163,31 @@ export default function ChatPage() {
                   {new Date(m.ts).toLocaleTimeString()} · {m.text}
                 </div>
               ) : (
-                <div key={`${m.id}-${m.ts}`} className="text-sm">
-                  <span className="mr-2 font-semibold">{m.nickname}</span>
-                  <span className="text-gray-800">{m.text}</span>
-                  <span className="ml-2 align-middle text-[10px] text-gray-400">
-                    {new Date(m.ts).toLocaleTimeString()}
-                  </span>
+                // <div key={`${m.id}-${m.ts}`} className="text-sm">
+                //   <span className="mr-2 font-semibold">{m.nickname}</span>
+                //   <span className="text-gray-800">{m.text}</span>
+                //   <span className="ml-2 align-middle text-[10px] text-gray-400">
+                //     {new Date(m.ts).toLocaleTimeString()}
+                //   </span>
+                // </div>
+
+                <div
+                  key={`${m.id}-${m.ts}`}
+                  className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[70%] rounded-2xl px-3 py-2 text-sm shadow ${m.isMe ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"}`}
+                  >
+                    <div
+                      className={`mb-1 text-xs ${m.isMe ? "text-blue-100" : "text-gray-500"}`}
+                    >
+                      {m.name}
+                    </div>
+                    <div>{m.text}</div>
+                    <div className="mt-1 text-right text-[10px] opacity-70">
+                      {new Date(m.ts).toLocaleTimeString()}
+                    </div>
+                  </div>
                 </div>
               ),
             )}
