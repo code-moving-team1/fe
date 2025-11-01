@@ -7,7 +7,7 @@ import { getDisplayNickname } from "@/utils/getDisplayNickname";
 
 type ChatMsg = {
   id: string;
-  name: string;
+  nickname: string;
   text: string;
   ts: number;
   isMe?: boolean;
@@ -80,13 +80,9 @@ export default function ChatPage() {
         list.map((m) => ({ ...m, isMe: m.id === (myIdRef.current ?? "") })),
       );
     });
-    // s.on("chat:system", (m) =>
-    //   setMsgs((prev) => [...prev, { ...m, system: true }]),
-    // );
 
     s.on("chat:system", (m: SystemMsg) => setMsgs((prev) => [...prev, m]));
 
-    // s.on("chat:message", (m) => setMsgs((prev) => [...prev, m]));
     s.on("chat:message", (m: ChatMsg) => {
       setMsgs((prev) => [
         ...prev,
@@ -100,11 +96,6 @@ export default function ChatPage() {
     s.on("connect_error", (err) =>
       setMsgs((prev) => [
         ...prev,
-        // {
-        //   text: `연결 오류: ${err?.message ?? "unknown"}`,
-        //   ts: Date.now(),
-        //   system: true,
-        // },
         {
           system: true,
           text: `연결 오류: ${err?.message ?? "unknown"}`,
@@ -163,14 +154,6 @@ export default function ChatPage() {
                   {new Date(m.ts).toLocaleTimeString()} · {m.text}
                 </div>
               ) : (
-                // <div key={`${m.id}-${m.ts}`} className="text-sm">
-                //   <span className="mr-2 font-semibold">{m.nickname}</span>
-                //   <span className="text-gray-800">{m.text}</span>
-                //   <span className="ml-2 align-middle text-[10px] text-gray-400">
-                //     {new Date(m.ts).toLocaleTimeString()}
-                //   </span>
-                // </div>
-
                 <div
                   key={`${m.id}-${m.ts}`}
                   className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}
@@ -181,7 +164,7 @@ export default function ChatPage() {
                     <div
                       className={`mb-1 text-xs ${m.isMe ? "text-blue-100" : "text-gray-500"}`}
                     >
-                      {m.name}
+                      {m.nickname}
                     </div>
                     <div>{m.text}</div>
                     <div className="mt-1 text-right text-[10px] opacity-70">
