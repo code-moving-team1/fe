@@ -32,6 +32,18 @@ export const profileConfig: Record<"customer" | "mover", MenuItem[]> = {
     { href: "/profile/edit/customer", label: "프로필 수정" },
     { href: "/likes", label: "찜한 기사님" },
     { href: "/reviews", label: "이사 리뷰" },
+    {
+      href: "/points/charge",
+      label: "포인트 충전하기",
+      className: "text-blue-600",
+    },
   ],
-  mover: [{ href: "/my-page", label: "마이페이지" }],
+  mover: [
+    { href: "/my-page", label: "마이페이지" },
+    {
+      href: "/points/charge",
+      label: "포인트 충전하기",
+      className: "text-blue-600",
+    },
+  ],
 };
