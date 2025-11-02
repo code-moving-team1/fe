@@ -21,6 +21,7 @@ export default function PointsHistoryPage() {
       <h1 className="mb-4 text-2xl font-semibold">결제 내역</h1>
 
       <div className="rounded border bg-white">
+        {/* 헤더 */}
         <div className="grid grid-cols-12 border-b px-3 py-2 text-xs font-semibold text-gray-600">
           <div className="col-span-3">결제일시</div>
           <div className="col-span-2">금액</div>
@@ -28,7 +29,24 @@ export default function PointsHistoryPage() {
           <div className="col-span-3">수단</div>
           <div className="col-span-2">영수증</div>
         </div>
+        {/* 상태 표시 */}
+        {q.isLoading && (
+          <div className="p-6 text-center text-sm text-gray-600">
+            불러오는 중...
+          </div>
+        )}
+        {q.isError && (
+          <div className="p-6 text-center text-sm text-red-600">
+            결제 내역을 불러오지 못했습니다.
+          </div>
+        )}
+        {!q.isLoading && items.length === 0 && (
+          <div className="p-6 text-center text-sm text-gray-500">
+            결제 내역이 없습니다.
+          </div>
+        )}
 
+        {/* 목록 */}
         {items.map((p) => (
           <div
             key={p.id}
@@ -66,19 +84,22 @@ export default function PointsHistoryPage() {
           </div>
         ))}
 
-        <div className="p-3">
-          <button
-            onClick={() => q.fetchNextPage()}
-            disabled={!q.hasNextPage || q.isFetchingNextPage}
-            className="w-full rounded border px-3 py-2 text-sm disabled:opacity-50"
-          >
-            {q.isFetchingNextPage
-              ? "불러오는 중..."
-              : q.hasNextPage
-                ? "더 보기"
-                : "끝"}
-          </button>
-        </div>
+        {/* 더보기 */}
+        {items.length > 0 && (
+          <div className="p-3">
+            <button
+              onClick={() => q.fetchNextPage()}
+              disabled={!q.hasNextPage || q.isFetchingNextPage}
+              className="w-full rounded border px-3 py-2 text-sm disabled:opacity-50"
+            >
+              {q.isFetchingNextPage
+                ? "불러오는 중..."
+                : q.hasNextPage
+                  ? "더 보기"
+                  : "끝"}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mt-4">

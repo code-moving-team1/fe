@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import clientApi from "@/lib/api/axiosClient.client"; // baseURL: "/api", withCredentials: true
+import Link from "next/link";
 
 export default function SuccessPage() {
   const [msg, setMsg] = useState("결제 확인 중...");
@@ -46,6 +47,12 @@ export default function SuccessPage() {
     <main className="mx-auto max-w-md p-6">
       <h1 className="mb-4 text-2xl font-semibold">결제 결과</h1>
       <p>{msg}</p>
+      <Link
+        href="/points/history"
+        className="inline-block rounded bg-black px-4 py-2 text-white"
+      >
+        상세 결제내역 보기
+      </Link>
     </main>
   );
 }
