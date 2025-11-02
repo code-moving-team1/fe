@@ -10,7 +10,11 @@ export default function ChargePage() {
   const pay100 = async () => {
     setLoading(true);
     try {
-      const toss = await loadTossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!);
+      const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
+     if (!clientKey) {
+       throw new Error("환경변수 NEXT_PUBLIC_TOSS_CLIENT_KEY가 설정되지 않았습니다.");
+     }
+      const toss = await loadTossPayments(clientKey);
 
       // 데모: 100원 고정 (= 100 포인트)
       const amount = 100;
