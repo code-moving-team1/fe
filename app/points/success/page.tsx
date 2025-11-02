@@ -16,12 +16,20 @@ export default function SuccessPage() {
     (async () => {
       try {
         // 백엔드에서 토스 결제 승인 + 포인트 적립
-        await clientApi.post("/payments/toss/confirm", {
+        const { data } = await clientApi.post("/payments/toss/confirm", {
           paymentKey,
           orderId,
           amount,
         });
-        setMsg("포인트가 충전되었습니다. (100원 → 100P)");
+        setMsg(
+          `포인트가 충전되었습니다. (${amount.toLocaleString()}원 → ${amount.toLocaleString()}P) / 현재 잔액: ${data.newBalance.toLocaleString()}P`,
+        );
+        // await clientApi.post("/payments/toss/confirm", {
+        //   paymentKey,
+        //   orderId,
+        //   amount,
+        // });
+        // setMsg(`포인트가 충전되었습니다. (${amount.toLocaleString()}원 → ${amount.toLocaleString()}P)`);
       } catch (e: any) {
         // setMsg(`결제 승인 실패: ${e?.response?.data?.message ?? e?.message ?? "unknown"}`);
         const r = e?.response;
