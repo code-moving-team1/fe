@@ -4,15 +4,27 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useMe } from "@/hooks/useAuth";
+// import { useMe } from "@/hooks/useAuth";
+import type { MeResponse } from "@/types/auth";
 
 import HeaderLayout from "./HeaderLayout";
 import ProfileSection from "./ProfileSection";
 import NavMenu from "./NavMenu";
 import logo from "@/public/assets/logo.svg";
 
-export default function HeaderRefactor() {
-  const { data: me } = useMe();
+// export default function HeaderRefactor() {
+//   const { data: me } = useMe();
+
+//
+
+export default function HeaderRefactor({
+  userType,
+  meInitial,
+}: {
+  userType: "customer" | "mover" | null;
+  meInitial?: MeResponse;
+}) {
+  const me = meInitial; // ✅ 서버에서 받은 me 그대로 사용 (깜빡임 없음)
   const [open, setOpen] = useState(false);
 
   return (
@@ -25,10 +37,22 @@ export default function HeaderRefactor() {
 
           <div className="hidden md:flex">
             <NavMenu me={me} />
+            {/* {status === "pending" ? (
+              <div className="h-[44px] w-[320px]" />
+            ) : (
+              <NavMenu me={me} />
+            )} */}
           </div>
         </>
       }
       right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
+      // right={
+      //   status === "pending" ? (
+      //     <div className="h-9 w-24 animate-pulse rounded-md bg-gray-100" />
+      //   ) : (
+      //     <ProfileSection me={me} open={open} setOpen={setOpen} />
+      //   )
+      // }
       menu={<NavMenu me={me} layout="drawer" />}
     />
   );

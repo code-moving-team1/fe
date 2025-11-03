@@ -144,24 +144,3 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
     </div>
   );
 }
-
-//   return (
-//     <div className="flex items-center gap-6">
-//       <Image src={alarmIcon} alt="알람" width={30} height={30} />
-//       <div className="relative flex items-center gap-2">
-//         <button
-//           onClick={() => setOpen(!open)}
-//           className="flex items-center gap-2"
-//         >
-//           <Image src={profileIcon} alt="프로필" width={36} height={36} />
-//           <span className="font-bold text-black">
-//             {userType === "mover"
-//               ? (me?.name ?? "기사님")
-//               : (me?.name ?? "고객님")}
-//           </span>
-//         </button>
-//         {open && <ProfileDropdown userType={userType} me={me} />}
-//       </div>
-//     </div>
-//   );
-// }
