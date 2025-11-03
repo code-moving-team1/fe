@@ -20,11 +20,11 @@ export default function ProfileDropdown({
   const menus: MenuItem[] = profileConfig[userType];
 
   const marginTopClass =
-    userType === "customer" ? "mt-58 md:mt-69" : "mt-42 md:mt-49";
+    userType === "customer" ? "mt-66 md:mt-79" : "mt-50 md:mt-59";
 
   return (
     <div
-      className={`absolute left-0 ${marginTopClass} w-30 rounded-lg border border-gray-200 bg-white shadow-lg md:w-45`}
+      className={`absolute right-0 ${marginTopClass} w-30 rounded-lg border border-gray-200 bg-white shadow-lg md:w-45`}
     >
       <div className="px-3 py-3 text-xs font-bold text-gray-800 md:px-4 md:py-4 md:text-sm">
         {me?.name

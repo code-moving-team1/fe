@@ -76,7 +76,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
             height={30}
           />
           {unread > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs text-white">
+            <span className="absolute -top-1 -right-1 mt-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs text-white">
               {unread > 99 ? "99+" : unread}
             </span>
           )}
