@@ -7,7 +7,6 @@ import Image from "next/image";
 
 export default function Calendar() {
   const { date, setDate } = useEstimateStore();
-
   const today = dayjs().startOf("day");
 
   const initialView = date
@@ -22,7 +21,7 @@ export default function Calendar() {
 
   const handleDateClick = (day: number) => {
     const selected = view.date(day).startOf("day");
-    if (selected.isBefore(today)) return;
+    if (selected.isBefore(today) || selected.isSame(today)) return;
     setDate(selected.format("YYYY-MM-DD"));
   };
 
@@ -74,8 +73,9 @@ export default function Calendar() {
               const current = view.date(day).startOf("day");
               const formatted = current.format("YYYY-MM-DD");
 
-              const isPast = current.isBefore(today);
               const isToday = current.isSame(today);
+              const isPast = current.isBefore(today);
+              const isPastOrToday = isPast || isToday;
               const isSelected = date === formatted;
 
               return (
@@ -83,11 +83,13 @@ export default function Calendar() {
                   type="button"
                   key={day}
                   onClick={() => handleDateClick(day)}
-                  disabled={isPast}
+                  disabled={isPastOrToday}
                   className={[
                     "flex aspect-square w-full items-center justify-center rounded-full text-[14px] transition-colors",
                     isSelected ? "bg-red-500 text-white" : "",
-                    !isSelected && isToday ? "border border-red-400" : "",
+                    isToday && !isSelected
+                      ? "border border-red-400 font-semibold text-red-400"
+                      : "",
                     isPast
                       ? "cursor-not-allowed text-gray-300"
                       : "hover:bg-gray-100 active:bg-gray-200",
@@ -108,7 +110,7 @@ export default function Calendar() {
           setView={setView}
           onPick={(day) => {
             const selected = view.date(day).startOf("day");
-            if (selected.isBefore(today)) return;
+            if (selected.isBefore(today) || selected.isSame(today)) return;
             setDate(selected.format("YYYY-MM-DD"));
           }}
           today={today}
@@ -207,8 +209,9 @@ function DesktopCalendarDropdown({
                 const current = view.date(day).startOf("day");
                 const formatted = current.format("YYYY-MM-DD");
 
-                const isPast = current.isBefore(today);
                 const isToday = current.isSame(today);
+                const isPast = current.isBefore(today);
+                const isPastOrToday = isPast || isToday;
                 const isSelected = date === formatted;
 
                 return (
@@ -216,11 +219,13 @@ function DesktopCalendarDropdown({
                     type="button"
                     key={day}
                     onClick={() => onPick(day)}
-                    disabled={isPast}
+                    disabled={isPastOrToday}
                     className={[
                       "rounded p-2 transition-colors",
                       isSelected ? "bg-red-500 text-white" : "",
-                      !isSelected && isToday ? "border border-red-400" : "",
+                      isToday && !isSelected
+                        ? "border border-red-400 font-semibold text-red-400"
+                        : "",
                       isPast
                         ? "cursor-not-allowed text-gray-300"
                         : "hover:bg-gray-100",

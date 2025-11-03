@@ -78,20 +78,17 @@ export default function AddressModal({
           ?.replace("광역시", "")
           ?.replace("도", "");
         const region2 = addressInfo.region_2depth_name;
-        // 주석 처리 한 부분 나중에 전체주소 나오게 바꾸기
-        // const region3 = addressInfo.region_3depth_name;
-        // const mainNo = addressInfo.main_address_no ?? "";
-        // const subNo = addressInfo.sub_address_no
-        //   ? `-${addressInfo.sub_address_no}`
-        //   : "";
-        // const fullAddress = `${region1} ${region2} ${region3} ${mainNo}${subNo}`;
+        const region3 = addressInfo.region_3depth_name;
+        const mainNo = addressInfo.main_address_no ?? "";
+        const subNo = addressInfo.sub_address_no
+          ? `-${addressInfo.sub_address_no}`
+          : "";
+        const fullAddress = `${region1} ${region2} ${region3} ${mainNo}${subNo}`;
 
-        const shortAddress = `${region1} ${region2}`;
         const regionFinal = regionMap[region1] || "서울";
 
-        setQuery(shortAddress);
-        setSelectedAddress(shortAddress);
-        // setSelectedAddress(fullAddress);
+        setQuery(fullAddress);
+        setSelectedAddress(fullAddress);
         setSelectedRegion(regionFinal);
         setResults([]);
       },
@@ -158,6 +155,8 @@ export default function AddressModal({
     onClose();
   };
 
+  const isSelectedValid = Boolean(selectedAddress && selectedRegion);
+
   return (
     <BaseModal
       open={open}
@@ -170,6 +169,7 @@ export default function AddressModal({
       trigger={undefined}
       onConfirm={handleConfirm}
       confirmText="확인"
+      validate={() => isSelectedValid}
     >
       <div className="hidden md:block">
         <div className="relative mb-3">
@@ -268,7 +268,7 @@ export default function AddressModal({
             </div>
           </div>
 
-          <ul className="/* 약 3~4개 정도 표시 */ max-h-[232px] touch-pan-y space-y-3 overflow-y-auto overscroll-contain pr-1">
+          <ul className="max-h-[232px] touch-pan-y space-y-3 overflow-y-auto overscroll-contain pr-1">
             {results.map((item, idx) => {
               const road = item.road_address?.address_name;
               const building = item.road_address?.building_name;
