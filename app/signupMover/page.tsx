@@ -94,7 +94,7 @@ export default function SignupMoverPage() {
     setLoading(true);
     try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/customer/signup`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/mover/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,13 +110,15 @@ export default function SignupMoverPage() {
    if (!res.ok) {
       setErrorMessage(data?.message || "회원가입에 실패했습니다.");
       } else {
-      router.push("/login/customer");
+      router.push("/login/mover");
       }
       } catch (err) {
       setErrorMessage("서버와 연결할 수 없습니다.");
       } finally {
       setLoading(false);
       }
+
+      
 
 };
 
