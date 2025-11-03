@@ -12,7 +12,7 @@ import NavMenu from "./NavMenu";
 import logo from "@/public/assets/logo.svg";
 
 export default function HeaderRefactor() {
-  const { data: me } = useMe();
+  const { data: me, status } = useMe();
   const [open, setOpen] = useState(false);
 
   return (
@@ -24,11 +24,23 @@ export default function HeaderRefactor() {
           </Link>
 
           <div className="hidden md:flex">
-            <NavMenu me={me} />
+            {/* <NavMenu me={me} /> */}
+            {status === "pending" ? (
+              <div className="h-[44px] w-[320px]" />
+            ) : (
+              <NavMenu me={me} />
+            )}
           </div>
         </>
       }
-      right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
+      // right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
+      right={
+        status === "pending" ? (
+          <div className="h-9 w-24 animate-pulse rounded-md bg-gray-100" />
+        ) : (
+          <ProfileSection me={me} open={open} setOpen={setOpen} />
+        )
+      }
       menu={<NavMenu me={me} layout="drawer" />}
     />
   );
