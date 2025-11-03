@@ -209,11 +209,10 @@ export default function SentEstimatesPage() {
     quotesQ.data?.pages.flatMap((p: any) =>
       (p.data ?? []).map((q: any) => ({
         ...q,
-        quoteId: q.quoteId, // ✅ 보정
+        quoteId: q.quoteId,
       })),
     ) ?? [];
 
-  // 지정요청(반려 탭 등)
   const quotesRawB: QuoteItem[] =
     (active === "rejected"
       ? directsQ.data?.pages.flatMap((p: any) => {

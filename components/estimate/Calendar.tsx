@@ -9,36 +9,25 @@ export default function Calendar() {
   const { date, setDate } = useEstimateStore();
 
   const today = dayjs().startOf("day");
-  const [currentYear, setCurrentYear] = useState(dayjs().year());
-  const [currentMonth, setCurrentMonth] = useState(dayjs().month());
 
-  const firstDayOfMonth = dayjs(`${currentYear}-${currentMonth + 1}-01`).day();
-  const daysInMonth = dayjs(
-    `${currentYear}-${currentMonth + 1}-01`,
-  ).daysInMonth();
+  const initialView = date
+    ? dayjs(date).startOf("month")
+    : today.startOf("month");
+  const [view, setView] = useState(initialView);
+
+  const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
+
+  const firstDayOfMonth = view.day();
+  const daysInMonth = view.daysInMonth();
 
   const handleDateClick = (day: number) => {
-    const selected = dayjs(`${currentYear}-${currentMonth + 1}-${day}`);
+    const selected = view.date(day).startOf("day");
     if (selected.isBefore(today)) return;
     setDate(selected.format("YYYY-MM-DD"));
   };
 
-  const handlePrevMonth = () => {
-    const prev = dayjs(`${currentYear}-${currentMonth + 1}-01`).subtract(
-      1,
-      "month",
-    );
-    setCurrentYear(prev.year());
-    setCurrentMonth(prev.month());
-  };
-
-  const handleNextMonth = () => {
-    const next = dayjs(`${currentYear}-${currentMonth + 1}-01`).add(1, "month");
-    setCurrentYear(next.year());
-    setCurrentMonth(next.month());
-  };
-
-  const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
+  const handlePrevMonth = () => setView((v) => v.subtract(1, "month"));
+  const handleNextMonth = () => setView((v) => v.add(1, "month"));
 
   return (
     <>
@@ -53,7 +42,7 @@ export default function Calendar() {
               <span className="text-xl">‹</span>
             </button>
             <p className="text-[18px] font-semibold">
-              {currentYear}. {String(currentMonth + 1).padStart(2, "0")}
+              {view.year()}. {String(view.month() + 1).padStart(2, "0")}
             </p>
             <button
               type="button"
@@ -82,9 +71,7 @@ export default function Calendar() {
 
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
-              const current = dayjs(
-                `${currentYear}-${currentMonth + 1}-${day}`,
-              );
+              const current = view.date(day).startOf("day");
               const formatted = current.format("YYYY-MM-DD");
 
               const isPast = current.isBefore(today);
@@ -113,14 +100,17 @@ export default function Calendar() {
           </div>
         </div>
       </div>
+
       <div className="relative hidden lg:block">
         <DesktopCalendarDropdown
           date={date}
-          currentYear={currentYear}
-          currentMonth={currentMonth}
-          onPrev={handlePrevMonth}
-          onNext={handleNextMonth}
-          onPick={handleDateClick}
+          view={view}
+          setView={setView}
+          onPick={(day) => {
+            const selected = view.date(day).startOf("day");
+            if (selected.isBefore(today)) return;
+            setDate(selected.format("YYYY-MM-DD"));
+          }}
           today={today}
           weekDays={weekDays}
         />
@@ -131,29 +121,23 @@ export default function Calendar() {
 
 function DesktopCalendarDropdown({
   date,
-  currentYear,
-  currentMonth,
-  onPrev,
-  onNext,
+  view,
+  setView,
   onPick,
   today,
   weekDays,
 }: {
   date: string | null;
-  currentYear: number;
-  currentMonth: number;
-  onPrev: () => void;
-  onNext: () => void;
+  view: dayjs.Dayjs;
+  setView: (updater: (v: dayjs.Dayjs) => dayjs.Dayjs) => void;
   onPick: (day: number) => void;
   today: dayjs.Dayjs;
   weekDays: string[];
 }) {
   const [open, setOpen] = useState(false);
 
-  const firstDayOfMonth = dayjs(`${currentYear}-${currentMonth + 1}-01`).day();
-  const daysInMonth = dayjs(
-    `${currentYear}-${currentMonth + 1}-01`,
-  ).daysInMonth();
+  const firstDayOfMonth = view.day();
+  const daysInMonth = view.daysInMonth();
 
   const handleConfirm = () => setOpen(false);
 
@@ -188,13 +172,21 @@ function DesktopCalendarDropdown({
           <div className="fixed inset-0 z-0" onClick={() => setOpen(false)} />
           <div className="absolute z-10 mt-2 w-80 rounded-lg border bg-white p-4 shadow-lg">
             <div className="mb-2 flex items-center justify-between">
-              <button type="button" onClick={onPrev} className="px-2">
+              <button
+                type="button"
+                onClick={() => setView((v) => v.subtract(1, "month"))}
+                className="px-2"
+              >
                 ◀
               </button>
               <p className="font-semibold">
-                {currentYear}.{String(currentMonth + 1).padStart(2, "0")}
+                {view.year()}.{String(view.month() + 1).padStart(2, "0")}
               </p>
-              <button type="button" onClick={onNext} className="px-2">
+              <button
+                type="button"
+                onClick={() => setView((v) => v.add(1, "month"))}
+                className="px-2"
+              >
                 ▶
               </button>
             </div>
@@ -212,9 +204,7 @@ function DesktopCalendarDropdown({
 
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const day = i + 1;
-                const current = dayjs(
-                  `${currentYear}-${currentMonth + 1}-${day}`,
-                );
+                const current = view.date(day).startOf("day");
                 const formatted = current.format("YYYY-MM-DD");
 
                 const isPast = current.isBefore(today);

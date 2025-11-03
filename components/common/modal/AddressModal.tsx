@@ -178,7 +178,7 @@ export default function AddressModal({
           <button
             type="button"
             onClick={handleCurrentLocation}
-            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
+            className="absolute right-2 mt-6 -translate-y-1/2 cursor-pointer"
           >
             <Image
               src="/icons/ic_my_location.svg"

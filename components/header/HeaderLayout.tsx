@@ -2,6 +2,8 @@
 
 import { ReactNode, useEffect, useState } from "react";
 
+const CONTAINER = "mx-auto w-full max-w-6xl px-4";
+
 export default function HeaderLayout({
   left,
   right,
@@ -22,31 +24,33 @@ export default function HeaderLayout({
 
   return (
     <header className="relative z-30 border-b border-gray-100 bg-white">
-      <nav className="flex items-center justify-between px-3 py-2 whitespace-nowrap sm:px-4 md:px-6 lg:px-[8vw]">
-        <div className="flex items-center gap-3 md:min-w-0 md:flex-1 md:gap-6 [&>*:first-child]:shrink-0">
-          {left}
-        </div>
+      <nav className="whitespace-nowrap">
+        <div className={`${CONTAINER} flex items-center justify-between py-2`}>
+          <div className="flex items-center gap-3 md:min-w-0 md:flex-1 md:gap-6 [&>*:first-child]:shrink-0">
+            {left}
+          </div>
 
-        <div className="ml-3 flex flex-shrink-0 items-center gap-3 sm:gap-4 md:gap-5">
-          {right}
+          <div className="ml-3 flex flex-shrink-0 items-center gap-3 sm:gap-4 md:gap-5">
+            {right}
 
-          <button
-            type="button"
-            aria-label="메뉴 열기"
-            aria-controls="mobile-drawer"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200 md:hidden"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 6h18M3 12h18M3 18h18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
+            <button
+              type="button"
+              aria-label="메뉴 열기"
+              aria-controls="mobile-drawer"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md hover:bg-gray-100 active:bg-gray-200 md:hidden"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M3 6h18M3 12h18M3 18h18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </nav>
 
