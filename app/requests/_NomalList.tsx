@@ -1,7 +1,8 @@
+// app/requests/_NomalList.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery ,useQueryClient} from "@tanstack/react-query";
 import { fetchMoveRequests, MoveRequestFilter } from "@/lib/api/moveRequest";
 import { moveRequestsKey } from "@/lib/queries/requestKeys"; // 쓰지 않아도 그대로 둡니다
 import FilterBar from "@/components/filter/FilterBar";
@@ -17,6 +18,7 @@ export default function NormalList({
 }: {
   initialFilters: MoveRequestFilter;
 }) {
+  
   const [filters, setFilters] = useState(initialFilters);
   const [selectedLabels, setSelectedLabels] = useState({
     from: "출발 지역",
