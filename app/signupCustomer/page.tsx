@@ -132,7 +132,7 @@ const router = useRouter();
   const canSubmit = isFormFilled && isFormValid;
 
    const handleSnsLoginClick = (provider: SnsProvider) => {
-      handleSnsLogin(provider, "mover");
+      handleSnsLogin(provider, "customer");
     };
 
   return (
