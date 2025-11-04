@@ -16,7 +16,7 @@ import { serviceOptions, regionOptions } from "@/lib/constants/options";
 
 export default function MoverInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [nickname, setNickname] = useState("임시");
+
   const [career, setCareer] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
@@ -57,7 +57,7 @@ export default function MoverInitProfilePage() {
   const handleInitProfile = async () => {
     try {
       await setMoverInitProfile({
-        nickname,
+        nickname: String(Date.now()),
         career,
         introduction,
         description,
@@ -102,7 +102,6 @@ export default function MoverInitProfilePage() {
   };
 
   const isFormValid =
-    nickname.trim() !== "" &&
     career.trim() !== "" &&
     introduction.trim() !== "" &&
     description.trim() !== "" &&
