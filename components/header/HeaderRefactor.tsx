@@ -24,23 +24,11 @@ export default function HeaderRefactor() {
           </Link>
 
           <div className="hidden md:flex">
-            {/* <NavMenu me={me} /> */}
-            {status === "pending" ? (
-              <div className="h-[44px] w-[320px]" />
-            ) : (
-              <NavMenu me={me} />
-            )}
+            <NavMenu me={me} />
           </div>
         </>
       }
-      // right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
-      right={
-        status === "pending" ? (
-          <div className="h-9 w-24 animate-pulse rounded-md bg-gray-100" />
-        ) : (
-          <ProfileSection me={me} open={open} setOpen={setOpen} />
-        )
-      }
+      right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
       menu={<NavMenu me={me} layout="drawer" />}
     />
   );

@@ -21,6 +21,11 @@ export const useLogout = () => {
       // if (s?.connected) s.disconnect(); //연결 해제
 
       // 상태/캐시 정리
+      queryClient.setQueryData(["me"], undefined);
+      queryClient.invalidateQueries({
+        queryKey: ["me"],
+        refetchType: "inactive",
+      });
       clearAuth();
       queryClient.clear(); // 전체 캐시 초기화
 

@@ -23,12 +23,13 @@ export function middleware(request: NextRequest) {
     "/reviews",
     "/chat",
     "/points",
+    "/myEstimates",
   ];
   const moverPaths = [
     "/requests",
     "/init-profile/mover",
     "/my-page",
-    "/myEstimates",
+    // "/myEstimates",
     "/profile/edit/mover",
     "/sentEstimates",
     "/estimate",
