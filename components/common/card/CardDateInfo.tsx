@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import dayjs from "dayjs";
 
 interface CardDateInfoProps {
   movingDate: string;
@@ -9,11 +12,16 @@ export default function CardDateInfo({
   movingDate,
   className = "",
 }: CardDateInfoProps) {
-  const formattedDate = new Date(movingDate).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  console.log("movingDate >>>", movingDate);
+
+  const isFormattedKorean =
+    movingDate?.includes("년") && movingDate?.includes("월");
+  const formattedDate = isFormattedKorean
+    ? movingDate
+    : movingDate
+      ? dayjs(movingDate.replace(" ", "T")).format("YYYY.MM.DD")
+      : "-";
+
   return (
     <div className={`flex flex-col items-start ${className}`}>
       <p className="text-[14px] text-gray-400 sm:text-[16px]">이사일</p>
