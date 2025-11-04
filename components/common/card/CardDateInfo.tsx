@@ -12,8 +12,6 @@ export default function CardDateInfo({
   movingDate,
   className = "",
 }: CardDateInfoProps) {
-  console.log("movingDate >>>", movingDate);
-
   const isFormattedKorean =
     movingDate?.includes("년") && movingDate?.includes("월");
   const formattedDate = isFormattedKorean
