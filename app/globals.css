@@ -28,6 +28,22 @@
   font-weight: 700;
 }
 
+@keyframes car-move {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
+}
+
+/* 접근성: 모션 최소화 설정 시 정지 */
+@media (prefers-reduced-motion: reduce) {
+  .car-loader__car {
+    animation: none !important;
+  }
+}
+
 body {
   font-family: "Pretendard", sans-serif;
 }

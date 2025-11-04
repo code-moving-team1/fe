@@ -12,8 +12,8 @@ import {
 import { connectSocket } from "@/lib/socket/socket";
 
 type UseNotificationsOptions = {
-  enabled?: boolean;     // 로그인 여부
-  panelOpen?: boolean;   // 알림 패널 오픈 여부
+  enabled?: boolean; // 로그인 여부
+  panelOpen?: boolean; // 알림 패널 오픈 여부
 };
 
 export function useNotifications(opts: UseNotificationsOptions = {}) {
@@ -100,9 +100,7 @@ export function useNotifications(opts: UseNotificationsOptions = {}) {
 
         s.on("notification:new", (payload: NotificationItem) => {
           // 패널 안 열려 있어도 최신 10개 캐시 유지
-          setItems((prev) =>
-            [payload, ...prev].slice(0, 10)
-          );
+          setItems((prev) => [payload, ...prev].slice(0, 10));
           setUnread((c) => c + (payload?.isRead ? 0 : 1));
         });
 
@@ -132,7 +130,7 @@ export function useNotifications(opts: UseNotificationsOptions = {}) {
       await markRead(n.id);
       setUnread((c) => Math.max(0, c - (n.isRead ? 0 : 1)));
       setItems((prev) =>
-        prev.map((x) => (x.id === n.id ? { ...x, isRead: true } : x))
+        prev.map((x) => (x.id === n.id ? { ...x, isRead: true } : x)),
       );
     } catch {}
     if (n.link) window.location.href = n.link;
@@ -164,125 +162,3 @@ export function useNotifications(opts: UseNotificationsOptions = {}) {
     reload,
   };
 }
-
-
-// // hooks/useNotifications.ts
-// "use client";
-
-// import { useEffect, useState, useCallback } from "react";
-// // import { getSocket } from "@/lib/socket/socket";
-// import {
-//   fetchUnreadCount,
-//   fetchNotifications,
-//   markRead,
-//   markAllRead,
-//   type NotificationItem,
-// } from "@/lib/api/notifications";
-// import { connectSocket } from "@/lib/socket/socket";
-
-// type UseNotificationsOptions = {
-//   enabled?: boolean; // 로그인 여부
-//   panelOpen?: boolean; // 알림 패널 오픈 여부
-// };
-
-// // export function useNotifications() {
-// export function useNotifications(opts: UseNotificationsOptions = {}) {
-//   const { enabled = true, panelOpen = false } = opts;
-//   const [unread, setUnread] = useState(0);
-//   const [items, setItems] = useState<NotificationItem[]>([]);
-//   const [loading, setLoading] = useState(true);
-
-//   const loadInitial = useCallback(async () => {
-//     setLoading(true);
-//     try {
-//       const [cnt, list] = await Promise.all([
-//         fetchUnreadCount(),
-//         fetchNotifications(1, 10),
-//       ]);
-//       setUnread(cnt);
-//       setItems(list.data);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     loadInitial();
-//   }, [loadInitial]);
-
-//   useEffect(() => {
-//     let mounted = true;
-//     let s: ReturnType<typeof connectSocket> extends Promise<infer T> ? T : any;
-//     (async () => {
-//       try {
-//         s = await connectSocket(); // ✅ 연결 보장
-//         if (!mounted) return;
-//         s.on("notification:new", (payload: any) => {
-//           setItems((prev) => [payload, ...prev].slice(0, 10));
-//           setUnread((c) => c + 1);
-//         });
-//         s.on("notification:unreadCount", ({ count }: { count: number }) => {
-//           setUnread(count);
-//         });
-//       } catch (e) {
-//         console.warn("socket connect failed in useNotifications", e);
-//       }
-//     })();
-
-//     return () => {
-//       mounted = false;
-//       // s가 연결된 후에만 off
-//       if (s) {
-//         s.off("notification:new");
-//         s.off("notification:unreadCount");
-//       }
-//     };
-//     // const s = getSocket();
-
-//     // s.on("notification:new", (payload) => {
-//     //   // 실시간 수신 → 맨 위에 추가 + 뱃지 +1
-//     //   setItems((prev) => [payload, ...prev].slice(0, 10));
-//     //   setUnread((c) => c + 1);
-//     // });
-
-//     // s.on("notification:unreadCount", ({ count }) => {
-//     //   setUnread(count);
-//     // });
-
-//     // return () => {
-//     //   s.off("notification:new");
-//     //   s.off("notification:unreadCount");
-//     // };
-//   }, []);
-
-//   const onClickItem = async (n: NotificationItem) => {
-//     // 읽음 처리 후 링크 이동
-//     try {
-//       await markRead(n.id);
-//       setUnread((c) => Math.max(0, c - (n.isRead ? 0 : 1)));
-//       setItems((prev) =>
-//         prev.map((x) => (x.id === n.id ? { ...x, isRead: true } : x)),
-//       );
-//     } catch {}
-//     if (n.link) window.location.href = n.link;
-//   };
-
-//   const onMarkAllRead = async () => {
-//     try {
-//       const updated = await markAllRead();
-//       if (updated > 0) {
-//         setUnread(0);
-//         setItems((prev) => prev.map((x) => ({ ...x, isRead: true })));
-//       }
-//     } catch {}
-//   };
-
-//   return {
-//     unread,
-//     items,
-//     loading,
-//     onClickItem,
-//     onMarkAllRead,
-//     reload: loadInitial,
-//   };
-// }

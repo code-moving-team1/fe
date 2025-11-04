@@ -8,6 +8,9 @@ import alarmIcon from "@/public/icons/ic_alarm.svg";
 import profileIcon from "@/public/icons/ic_profile.svg";
 import { MeResponse } from "@/types/auth";
 import { useNotifications } from "@/hooks/useNotifications";
+import { Spinner } from "../common/spinner/Spinner";
+import OrangeSpinner from "../common/spinner/OrangeSpinner";
+import CarLoader from "../common/loader/CarLoader";
 
 interface Props {
   me?: MeResponse;
@@ -102,7 +105,23 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
 
             <div className="max-h-[55vh] overflow-y-auto py-1 md:max-h-[60vh] md:py-2">
               {loading ? (
-                <div className="p-4 text-sm text-gray-400">불러오는 중…</div>
+                // <div className="p-4 text-sm text-gray-400">불러오는 중…</div>
+                // <div className="grid min-h-[80px] place-items-center py-6">
+                //   {/* <Spinner /> */}
+                //   <OrangeSpinner thickness={5} />
+                // </div>
+                <div className="grid min-h-[160px] place-items-center py-6">
+                  {/* 한 대만 달리는 기본형 */}
+                  {/* <CarLoader height={48} duration={1.6} /> */}
+
+                  {/* 여러 대가 스태거로 달리는 버전 (더 ‘로딩’같은 느낌) */}
+                  <CarLoader
+                    height={100}
+                    duration={1.2}
+                    cars={3}
+                    stagger={0.6}
+                  />
+                </div>
               ) : items.length === 0 ? (
                 <div className="p-4 text-sm text-gray-400">알림이 없어요.</div>
               ) : (
