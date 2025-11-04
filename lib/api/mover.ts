@@ -21,7 +21,7 @@ export type Region =
   | "제주";
 
 export type ServiceType = "SMALL" | "FAMILY" | "OFFICE";
-export type SortBy = "reviews" | "rating" | "career" | "quotes";
+export type SortBy = "reviews" | "rating" | "quotes";
 
 export type Mover = {
   id: number;

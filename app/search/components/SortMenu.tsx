@@ -4,11 +4,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import type { SortBy } from "@/lib/api/mover";
 
-const SORTS: SortBy[] = ["reviews", "rating", "career", "quotes"];
+const SORTS: SortBy[] = ["reviews", "rating", "quotes"];
 const LABEL: Record<SortBy, string> = {
   reviews: "리뷰 많은 순",
   rating: "평점 높은 순",
-  career: "경력 많은 순",
   quotes: "확정 견적 많은 순",
 };
 

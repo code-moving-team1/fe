@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type SortBy = "reviews" | "rating" | "career" | "quotes";
+export type SortBy = "reviews" | "rating" | "quotes";
 
 type State = {
   q: string;
