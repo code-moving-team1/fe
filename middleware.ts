@@ -24,6 +24,7 @@ export function middleware(request: NextRequest) {
     "/chat",
     "/points",
     "/myEstimates",
+    "/profile/edit/customer",
   ];
   const moverPaths = [
     "/requests",

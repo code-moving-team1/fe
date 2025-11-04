@@ -13,7 +13,7 @@ type Props = {
     q?: string;
     region?: string;
     service?: string; // SMALL | FAMILY | OFFICE
-    sort?: "reviews" | "rating" | "career" | "quotes";
+    sort?: "reviews" | "rating" | "quotes";
     page?: number;
   };
 };
@@ -50,7 +50,6 @@ export default function MoverSearchClient({ initialParams }: Props) {
     const nextSort = (sp.get("sort") ?? initialParams.sort ?? "reviews") as
       | "reviews"
       | "rating"
-      | "career"
       | "quotes";
     const nextPage = Number(sp.get("page") ?? initialParams.page ?? 1) || 1;
 
