@@ -25,7 +25,6 @@ export default async function Page({
   const sort = ((pick(sp, "sort") as any) ?? "reviews") as
     | "reviews"
     | "rating"
-    | "career"
     | "quotes";
   const page = Number(pick(sp, "page") ?? 1) || 1;
 
