@@ -4,12 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import {
-  validateName,
-  validateEmail,
-  validatePhone,
-  validatePassword,
-  validateConfirmPassword,
-} from "../signupUser/validation";
+  validateName,validateEmail,validatePhone,validatePassword,validateConfirmPassword,
+} from "../signupCustomer/validation";
+import SnsLoginButton from "@/components/common/button/SnsLoginButton";
+import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 
 type Form = {
   name?: string;
@@ -116,10 +114,7 @@ export default function SignupMoverPage() {
       setErrorMessage("서버와 연결할 수 없습니다.");
       } finally {
       setLoading(false);
-      }
-
-      
-
+      } 
 };
 
   //버튼 활성화 조건: 모든 필드 채워짐 + 에러 없음
@@ -127,19 +122,24 @@ export default function SignupMoverPage() {
   const isFormValid = Object.values(errors).every((msg) => !msg); 
   const canSubmit = isFormFilled && isFormValid;
 
+  
+ const handleSnsLoginClick = (provider: SnsProvider) => {
+    handleSnsLogin(provider, "mover");
+  };
+
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
-      <div className="m-[40px] mx-auto flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] px-[40px] py-[48px]">
-        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-[48px] text-[#474643]">
+      <div className="m-10 mx-auto flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] px-10 py-12">
+        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-12 text-[#474643]">
 
-          <div className="flex w-full max-w-[640px] flex-col justify-center gap-[8px] text-center">
+          <div className="flex w-full max-w-[640px] flex-col justify-center gap-2 text-center">
             <div className="mx-auto h-[100px]">
               <img src="/assets/logo.svg"
                 alt="무빙 로고" width={200}  height={80}
               />
             </div>
-            <div className="mx-auto flex flex-row gap-[8px] text-[20px]">
+            <div className="mx-auto flex flex-row gap-2 text-[20px]">
               <p>일반 회원이신가요?</p>
                <Link href="/signupUser" className="font-semibold text-[#F9502E] underline">
                 일반 회원 전용 페이지
@@ -147,13 +147,13 @@ export default function SignupMoverPage() {
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-[24px]">
+          <div className="flex w-full flex-col gap-6">
             <form
-              className="flex flex-col gap-[56px]"
+              className="flex flex-col gap-14"
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="mx-auto flex w-full flex-col gap-[32px]">
+              <div className="mx-auto flex w-full flex-col gap-8">
                 {[
                   {
                     id: "name",
@@ -186,7 +186,7 @@ export default function SignupMoverPage() {
                     type: "password",
                   },
                 ].map(({ id, label, placeholder, type }) => (
-                  <div key={id} className="flex flex-col gap-[16px]">
+                  <div key={id} className="flex flex-col gap-4">
                     <label className="text-[20px]">{label}</label>
                     <input
                       id={id}
@@ -194,7 +194,7 @@ export default function SignupMoverPage() {
                       placeholder={placeholder}
                       value={form[id as FormKey]}
                       onChange={handleChange}
-                      className={`w-full rounded-[16px] border p-[14px] focus:border-[#F9502E] focus:outline-none 
+                      className={`w-full rounded-2xl border p-3.5 focus:border-[#F9502E] focus:outline-none 
                         ${errors[id as FormKey] ? "border-[#FF4F64]" : "border-[#E6E6E6]"
                       }`}
                     />
@@ -208,7 +208,7 @@ export default function SignupMoverPage() {
                {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
               <button onClick={handleSignup} disabled={!canSubmit || loading} 
                 type="submit" 
-                className={`className="w-full " cursor-pointer rounded-[16px] p-[14px] font-semibold ${
+                className={`className="w-full " cursor-pointer rounded-2xl p-3.5 font-semibold ${
                   canSubmit
                     ? "cursor-pointer bg-[#F9502E] text-[#FFFFFF]"
                     : "cursor-not-allowed bg-[#D9D9D9] text-[#FFFFFF]"
@@ -218,7 +218,7 @@ export default function SignupMoverPage() {
               </button>
             </form>
 
-            <div className="mx-auto flex w-[300px] flex-row gap-[8px] text-[20px]">
+            <div className="mx-auto flex w-[300px] flex-row gap-2 text-[20px]">
               <p>이미 무빙 회원이신가요?</p>
              <Link href="/login/mover" className="font-semibold text-[#F9502E] underline">
               로그인
@@ -226,12 +226,19 @@ export default function SignupMoverPage() {
             </div>
           </div>
 
-          <div className="mx-auto flex flex-col gap-[32px] text-center text-[20px]">
+          <div className="mx-auto flex flex-col gap-8 text-center text-[20px]">
             <p>SNS 계정으로 간편 가입 하기</p>
-            <div className="mx-auto flex flex-row gap-[8px]">
-              <button>구글</button>
-              <button>네이버</button>
-              <button>카카오</button>
+            <div className="mx-auto flex flex-row gap-2">
+              <SnsLoginButton provider="google"
+              onClick={() => handleSnsLoginClick("google")}></SnsLoginButton>
+              <SnsLoginButton
+                provider="kakao"
+                onClick={() => handleSnsLoginClick("kakao")}
+              />
+              <SnsLoginButton
+                provider="naver"
+                onClick={() => handleSnsLoginClick("naver")}
+              />
             </div>
           </div>
         </div>
