@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   const BASIC_CUSTOMER_REDIRECT_PATH = "/search";
   const BASIC_MOVER_REDIRECT_PATH = "/requests";
   const pathname = request.nextUrl.pathname;
-  const publicPaths = ["/login", "/sign-up", "/landing"];
+  const publicPaths = ["/login", "/sign-up", "/signupMover", "/signuCustomer", "/landing"];
   const customerPaths = [
     "/search",
     "/estimate",
