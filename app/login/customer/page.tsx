@@ -144,7 +144,7 @@ export default function CustomerLoginPage() {
               <p className="font-bold">아직 무빙 회원이 아니신가요?</p>
               <a
                 className="font-semibold text-[#F9502E] underline"
-                href="/sign-up/customer"
+                href="/signupCustomer"
               >
                 이메일로 회원가입하기
               </a>
