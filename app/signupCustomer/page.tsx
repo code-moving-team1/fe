@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState,} from "react";
@@ -38,6 +39,10 @@ const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
   // 입력 값 변경 시 처리 + 실시간 검증
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -56,8 +61,7 @@ const router = useRouter();
         errorMsg = validatePhone(value);
         break;
       case "password":
-        errorMsg = validatePassword(value);
-        // 비밀번호 변경 시 confirmPassword도 재검증
+        errorMsg = validatePassword(value); 
         setErrors((prev) => ({
           ...prev,
           confirmPassword: validateConfirmPassword(value, form.confirmPassword),
@@ -199,7 +203,17 @@ const router = useRouter();
                     <label className="text-[20px]">{label}</label>
                     <input
                       id={id}
-                      type={type}
+                    type={
+                      id === "password"
+                        ? showPassword
+                          ? "text"
+                          : "password"
+                        : id === "confirmPassword"
+                        ? showConfirmPassword
+                          ? "text"
+                          : "password"
+                        : type
+                    }
                       placeholder={placeholder}
                       value={form[id as FormKey]}
                       onChange={handleChange}
@@ -207,6 +221,29 @@ const router = useRouter();
                         ${errors[id as FormKey] ? "border-[#FF4F64]" : "border-[#E6E6E6]"
                       }`}
                     />
+                    {(id === "password" || id === "confirmPassword") && (
+                    <button
+                      type="button"
+                      aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                      onClick={() =>
+                        id === "password"
+                          ? setShowPassword(!showPassword)
+                          : setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute top-[58px] right-4 -translate-y-1/2 cursor-pointer"
+                    >
+                      <Image
+                        src={
+                          (id === "password" ? showPassword : showConfirmPassword)
+                            ? "/icons/ic_visibility.svg"
+                            : "/icons/ic_visibility-off.svg"
+                        }
+                        alt="비밀번호 보기"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                  )}
                     {errors[id as FormKey] && (
                       <p className="text-[16px] text-[#FF4F64]">
                         {errors[id as FormKey]}
