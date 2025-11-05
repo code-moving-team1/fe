@@ -189,7 +189,7 @@ export default function SignupMoverPage() {
                     type: "password",
                   },
                 ].map(({ id, label, placeholder, type }) => (
-                  <div key={id} className="flex flex-col gap-4">
+                  <div key={id} className="relative flex flex-col gap-4">
                     <label className="text-[20px]">{label}</label>
                     <input
                       id={id}
@@ -220,7 +220,7 @@ export default function SignupMoverPage() {
                           ? setShowPassword(!showPassword)
                           : setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="absolute top-[58px] right-4 -translate-y-1/2 cursor-pointer"
+                      className="absolute top-[73px] right-4 -translate-y-1/2 cursor-pointer"
                     >
                       <Image
                         src={
