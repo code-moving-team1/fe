@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useInfiniteQuery ,useQueryClient} from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMoveRequests, MoveRequestFilter } from "@/lib/api/moveRequest";
 import { moveRequestsKey } from "@/lib/queries/requestKeys"; // 그대로 둠
 import FilterBar from "@/components/filter/FilterBar";
@@ -12,13 +12,34 @@ import { Spinner } from "@/components/common/spinner/Spinner";
 import { formatDateSeoul } from "@/utils/formatDateSeoul";
 import { Buttons } from "@/components/common/button";
 import { PendingButton } from "@/components/common/button/Buttons";
+import dayjs from "dayjs";
+
+const fmtDate = (input?: string | number | null) => {
+  if (!input) return "-";
+
+  if (
+    typeof input === "string" &&
+    input.includes("년") &&
+    input.includes("월")
+  ) {
+    return input;
+  }
+
+  const normalized =
+    typeof input === "string" &&
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(input)
+      ? input.replace(" ", "T")
+      : input;
+
+  const d = dayjs(normalized as any);
+  return d.isValid() ? d.format("YYYY.MM.DD") : "-";
+};
 
 export default function NormalList({
   initialFilters,
 }: {
   initialFilters: MoveRequestFilter;
 }) {
-  
   const [filters, setFilters] = useState(initialFilters);
   const [selectedLabels, setSelectedLabels] = useState({
     from: "출발 지역",
@@ -113,7 +134,7 @@ export default function NormalList({
               description={req.description?.trim()}
               from={req.departure}
               to={req.destination}
-              movingDate={formatDateSeoul(req.moveDate)}
+              movingDate={fmtDate(req.moveDate)}
               chips={[
                 {
                   label:

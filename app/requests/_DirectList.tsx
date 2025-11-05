@@ -14,6 +14,55 @@ import RejectRequestModal from "@/components/common/modal/RejectRequestModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
+import dayjs from "dayjs";
+
+const fmtDate = (input?: string | number | null) => {
+  if (!input) return "-";
+
+  if (
+    typeof input === "string" &&
+    input.includes("년") &&
+    input.includes("월")
+  ) {
+    return input;
+  }
+
+  const normalized =
+    typeof input === "string" &&
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(input)
+      ? input.replace(" ", "T")
+      : input;
+
+  const d = dayjs(normalized as any);
+  return d.isValid() ? d.format("YYYY.MM.DD") : "-";
+};
+
+const fmtDateTime = (input?: string | number | null) => {
+  if (!input) return "-";
+
+  if (
+    typeof input === "string" &&
+    input.includes("년") &&
+    input.includes("월")
+  ) {
+    return input;
+  }
+
+  if (typeof input === "number") {
+    const ms = input < 1e12 ? input * 1000 : input;
+    const d = dayjs(ms);
+    return d.isValid() ? d.format("YYYY.MM.DD HH:mm") : "-";
+  }
+
+  const normalized =
+    typeof input === "string" &&
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(input)
+      ? input.replace(" ", "T")
+      : (input as string);
+
+  const d = dayjs(normalized);
+  return d.isValid() ? d.format("YYYY.MM.DD HH:mm") : "-";
+};
 
 const svcMap: Record<
   DirectRow["serviceType"],
@@ -84,10 +133,8 @@ export default function DirectList() {
                 customerName={customerName}
                 from={r.departure}
                 to={r.destination}
-                movingDate={new Date(r.moveDate).toLocaleDateString("ko-KR")}
-                requestTime={new Date(
-                  r.direct_request_created_at,
-                ).toLocaleString("ko-KR")}
+                movingDate={fmtDate(r.moveDate)}
+                requestTime={fmtDateTime(r.direct_request_created_at)}
                 requestType={
                   r.direct_request_status === "PENDING"
                     ? "지정 요청 (대기)"

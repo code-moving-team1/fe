@@ -50,11 +50,12 @@ export default function CustomerEstimateCard({
 
       <CardHeaderCustomer customerName={customerName} />
 
-      <div className="flex flex-col gap-2 text-sm font-bold md:flex-row md:items-start md:justify-between">
-        <div className="order-1 md:order-0">
+      <div className="flex flex-col gap-2 text-sm font-semibold md:flex-row md:items-start md:justify-between md:text-xs md:font-medium">
+        <div className="order-1 min-w-0 md:order-0 md:flex-1">
           <CardRouteInfo from={from} to={to} />
         </div>
-        <div className="order-2 md:order-0">
+
+        <div className="order-2 md:order-0 md:shrink-0">
           <CardDateInfo movingDate={movingDate} />
         </div>
       </div>
