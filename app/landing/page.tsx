@@ -75,10 +75,10 @@ export default function Home() {
             className="block md:hidden"
           />
           <img
-            src="/assets/landing-Preview_md.png" alt="landing-preview_md"
+            src="/assets/landing-preview_md.png" alt="landing-preview_md"
             className="hidden md:block lg:hidden" 
           />
-          <img src="/assets/landing-Preview.svg" alt="landing-preview"
+          <img src="/assets/landing-preview.svg" alt="landing-preview"
           className="hidden lg:block" 
           />
         </div>
