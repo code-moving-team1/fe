@@ -177,10 +177,19 @@ export default function AddressModal({
     const building = item.road_address?.building_name;
     const jibun = item.address?.address_name;
 
-    
-    const fullAddress = building ? `${road} (${building})` : road || jibun;
-    // console.log("item : ", item);
-    // console.log("item.address : ", item.address);
+    // const fullAddress = building ? `${road} (${building})` : road || jibun;
+
+    // 화면 표기용 원본 주소(도로명 우선, 없으면 지번)
+    const base = building ? `${road} (${building})` : road || jibun || "";
+
+    // 카카오 원본 1뎁스(긴 이름) → 앞부분만 짧게 치환
+    const r1Raw: string = item.address?.region_1depth_name || "";
+    const fullAddress = shortenSidoInAddress(base, r1Raw)
+      .trim()
+      .replace(/\s+/g, " ");
+
+    // const regionFinal = regionEnumMap[r1Raw] || toShortSido(r1Raw) || "서울";
+
     console.log("handle select fullAddress : ", fullAddress);
     const regionKorean =
       item.address?.region_1depth_name
@@ -189,7 +198,7 @@ export default function AddressModal({
         ?.replace("도", "") || "서울";
     // console.log("region_1depth_name", regionKorean);
     const regionFinal = regionMap[regionKorean] || "서울";
-    // console.log("regionFinal", regionFinal);
+    console.log("regionFinal", regionFinal);
 
     setSelectedAddress(fullAddress);
     setSelectedRegion(regionFinal);
