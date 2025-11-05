@@ -144,7 +144,7 @@ export default function SignupMoverPage() {
             </div>
             <div className="mx-auto flex flex-row gap-2 text-[20px]">
               <p>일반 회원이신가요?</p>
-               <Link href="/signupUser" className="font-semibold text-[#F9502E] underline">
+               <Link href="/signupCustomer" className="font-semibold text-[#F9502E] underline">
                 일반 회원 전용 페이지
               </Link>
             </div>
