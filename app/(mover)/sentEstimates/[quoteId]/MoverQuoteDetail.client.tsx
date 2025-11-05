@@ -254,7 +254,7 @@ function IconButton({
       type="button"
       aria-label={ariaLabel}
       onClick={() => void onClick()}
-      className="relative overflow-hidden rounded-xl border-none p-0 shadow-sm transition hover:bg-zinc-50 active:scale-95"
+      className="relative cursor-pointer overflow-hidden rounded-xl border-none p-0 shadow-sm transition hover:bg-zinc-50 active:scale-95"
       style={{ width: size, height: size }}
     >
       <Image
