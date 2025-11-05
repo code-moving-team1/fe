@@ -1,8 +1,8 @@
+import { memo } from "react";
 import Card from "./Card";
 import CardHeaderCustomer from "./CardHeaderCustomer";
 import CardRouteInfo from "./CardRouteInfo";
 import CardDateInfo from "./CardDateInfo";
-import CardPrice from "./CardPrice";
 import { ServiceChip } from "../chip";
 import { ServiceChipProps } from "../chip/presets";
 
@@ -21,7 +21,7 @@ interface RejectedRequestCardProps {
   })[];
 }
 
-export default function RejectedRequestCard({
+function RejectedRequestCard({
   customerName,
   from,
   to,
@@ -63,3 +63,5 @@ export default function RejectedRequestCard({
     </Card>
   );
 }
+
+export default memo(RejectedRequestCard);

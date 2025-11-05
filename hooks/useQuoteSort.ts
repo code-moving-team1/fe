@@ -5,8 +5,8 @@ import { useMemo, useState } from "react";
 
 export type SentTabKey = "sent" | "rejected";
 export type SortLabel =
-  | "날짜순"
-  | "오래된순"
+  | "이사일 빠른순"
+  | "이사일 늦은순"
   | "등록 최신순"
   | "가격 높은순"
   | "가격 낮은순";
@@ -39,6 +39,7 @@ function isWithinKeepWindow(input: string | Date, days: number) {
   const diffDays = Math.floor((today.getTime() - dd.getTime()) / 86400000);
   return diffDays <= days;
 }
+
 function isPastDate(input: string | Date) {
   const d = typeof input === "string" ? new Date(input) : input;
   if (Number.isNaN(d.getTime())) return false;
@@ -60,7 +61,7 @@ export function useQuoteSort(
 ) {
   const keepDays = options?.keepDays ?? 14;
 
-  const [sortLabel, setSortLabel] = useState<SortLabel>("날짜순");
+  const [sortLabel, setSortLabel] = useState<SortLabel>("등록 최신순");
   const [priceSort, setPriceSort] = useState<"asc" | "desc" | null>(null);
 
   const list = useMemo(() => {
@@ -71,21 +72,21 @@ export function useQuoteSort(
     ).slice();
 
     if (priceSort) {
-      base.sort((a, b) => {
-        const ap = a.myQuote.price ?? Number.NEGATIVE_INFINITY;
-        const bp = b.myQuote.price ?? Number.NEGATIVE_INFINITY;
-        return priceSort === "asc" ? ap - bp : bp - ap;
-      });
+      base.sort((a, b) =>
+        priceSort === "asc"
+          ? (a.myQuote.price ?? 0) - (b.myQuote.price ?? 0)
+          : (b.myQuote.price ?? 0) - (a.myQuote.price ?? 0),
+      );
     } else {
-      if (sortLabel === "날짜순") {
+      if (sortLabel === "이사일 빠른순") {
         base.sort(
           (a, b) =>
             new Date(a.moveDate).getTime() - new Date(b.moveDate).getTime(),
         );
-      } else if (sortLabel === "오래된순") {
+      } else if (sortLabel === "이사일 늦은순") {
         base.sort(
           (a, b) =>
-            new Date(a.moveDate).getTime() - new Date(b.moveDate).getTime(),
+            new Date(b.moveDate).getTime() - new Date(a.moveDate).getTime(),
         );
       } else if (sortLabel === "등록 최신순") {
         base.sort(
@@ -97,12 +98,9 @@ export function useQuoteSort(
     }
 
     base = base.filter((it) => {
-      const past = isPastDate(it.moveDate);
-      if (!past) return true;
+      if (!isPastDate(it.moveDate)) return true;
       const status = it.myQuote.status;
-      const isCompleted = status === "ACCEPTED";
-      const isRejected = status === "REJECTED";
-      if (isCompleted || isRejected) {
+      if (status === "ACCEPTED" || status === "REJECTED") {
         return isWithinKeepWindow(it.moveDate, keepDays);
       }
       return false;

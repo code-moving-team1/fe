@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Card from "./Card";
 import CardHeaderCustomer from "./CardHeaderCustomer";
 import CardRouteInfo from "./CardRouteInfo";
@@ -22,7 +23,7 @@ interface CustomerEstimateCardProps {
   })[];
 }
 
-export default function CustomerEstimateCard({
+function CustomerEstimateCard({
   customerName,
   from,
   to,
@@ -69,3 +70,5 @@ export default function CustomerEstimateCard({
     </Card>
   );
 }
+
+export default memo(CustomerEstimateCard);

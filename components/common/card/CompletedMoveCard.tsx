@@ -1,4 +1,4 @@
-// components/common/card/CompletedMoveCard.tsx
+import { memo } from "react";
 import CustomerEstimateCard from "./CustomerEstimateCard";
 import { Buttons } from "../button";
 import Link from "next/link";
@@ -19,7 +19,7 @@ interface CompletedMoveCardProps {
   quoteId?: number | null;
 }
 
-export default function CompletedMoveCard({
+function CompletedMoveCard({
   customerName,
   from,
   to,
@@ -32,6 +32,7 @@ export default function CompletedMoveCard({
   quoteId,
 }: CompletedMoveCardProps) {
   const href = quoteId ? `/sentEstimates/${quoteId}` : "#";
+
   return (
     <CustomerEstimateCard
       customerName={customerName}
@@ -61,3 +62,5 @@ export default function CompletedMoveCard({
     </CustomerEstimateCard>
   );
 }
+
+export default memo(CompletedMoveCard);

@@ -23,7 +23,9 @@ export default function CardDateInfo({
   return (
     <div className={`flex flex-col items-start ${className}`}>
       <p className="text-[14px] text-gray-400 sm:text-[16px]">이사일</p>
-      <p className="text-[14px] font-bold sm:text-[18px]">{formattedDate}</p>
+      <p className="text-[14px] font-bold break-keep sm:text-[18px]">
+        {formattedDate}
+      </p>
     </div>
   );
 }

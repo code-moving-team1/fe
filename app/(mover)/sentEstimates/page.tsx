@@ -50,7 +50,7 @@ export default function SentEstimatesPage() {
     hasNextPage,
     isFetchingNextPage,
     fetchNext,
-  } = useMyQuotes(active);
+  } = useMyQuotes(active, { pageSize: 60 });
 
   useEffect(() => setMounted(true), []);
 
@@ -135,8 +135,8 @@ export default function SentEstimatesPage() {
               <ul className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
                 {(
                   [
-                    "날짜순",
-                    "오래된순",
+                    "이사일 빠른순",
+                    "이사일 늦은순",
                     "등록 최신순",
                     "가격 높은순",
                     "가격 낮은순",
