@@ -20,16 +20,52 @@ const regionMap: Record<string, string> = {
   대구: "대구",
   광주: "광주",
   울산: "울산",
-  강원: "강원",
+  강원특별자치: "강원",
   충북: "충북",
   충남: "충남",
-  전북: "전북",
+  전북특별자치: "전북",
   전남: "전남",
   경북: "경북",
   경남: "경남",
-  제주: "제주",
-  세종: "세종",
+  제주특별자치: "제주",
+  세종특별자치시: "세종",
 };
+
+const shortRegionMap: Record<string, string> = {
+  세종특별자치시: "세종",
+  강원특별자치도: "강원",
+  전북특별자치도: "전북",
+  제주특별자치도: "제주",
+  서울: "서울",
+  경기: "경기",
+  인천: "인천",
+  부산: "부산",
+  대전: "대전",
+  대구: "대구",
+  광주: "광주",
+  울산: "울산",
+  강원특별자치: "강원",
+  충북: "충북",
+  충남: "충남",
+  전북특별자치: "전북",
+  전남: "전남",
+  경북: "경북",
+  경남: "경남",
+  제주특별자치: "제주",
+};
+
+// 시/도 한 단어로 단축 (shortRegionMap 없으면 접미사 제거)
+function toShortSido(raw?: string) {
+  if (!raw) return "";
+  if (shortRegionMap[raw]) return shortRegionMap[raw];
+  return raw.replace(/(특별자치도|특별자치시|특별시|광역시|도)$/g, "");
+}
+
+// 풀 주소에서 맨 앞의 시/도만 짧게 바꿔주는 함수
+function shortenSidoInAddress(full: string, r1Raw: string) {
+  const short = toShortSido(r1Raw);
+  return full.startsWith(r1Raw) ? short + full.slice(r1Raw.length) : full;
+}
 
 export default function AddressModal({
   type,
@@ -73,19 +109,29 @@ export default function AddressModal({
           return;
         }
 
+        // console.log(
+        //   "addressInfo.region_1depth_name :",
+        //   addressInfo.region_1depth_name,
+        // );
         const region1 = addressInfo.region_1depth_name
           ?.replace("특별시", "")
           ?.replace("광역시", "")
-          ?.replace("도", "");
+          ?.replace("도", "")
+          ?.replace("시", "")
+          ?.replace("특별자치시", "")
+          ?.replace("특별자치", "");
+        console.log("replace 돈 이후 region_1depth_name", region1);
         const region2 = addressInfo.region_2depth_name;
         const region3 = addressInfo.region_3depth_name;
         const mainNo = addressInfo.main_address_no ?? "";
         const subNo = addressInfo.sub_address_no
           ? `-${addressInfo.sub_address_no}`
           : "";
+        const modifiedRegion1 = "";
         const fullAddress = `${region1} ${region2} ${region3} ${mainNo}${subNo}`;
-
+        console.log("fullAddress", fullAddress);
         const regionFinal = regionMap[region1] || "서울";
+        console.log("regionFinal", regionFinal);
 
         setQuery(fullAddress);
         setSelectedAddress(fullAddress);
@@ -130,15 +176,20 @@ export default function AddressModal({
     const road = item.road_address?.address_name;
     const building = item.road_address?.building_name;
     const jibun = item.address?.address_name;
-    const fullAddress = building ? `${road} (${building})` : road || jibun;
 
+    
+    const fullAddress = building ? `${road} (${building})` : road || jibun;
+    // console.log("item : ", item);
+    // console.log("item.address : ", item.address);
+    console.log("handle select fullAddress : ", fullAddress);
     const regionKorean =
       item.address?.region_1depth_name
         ?.replace("특별시", "")
         ?.replace("광역시", "")
         ?.replace("도", "") || "서울";
-
+    // console.log("region_1depth_name", regionKorean);
     const regionFinal = regionMap[regionKorean] || "서울";
+    // console.log("regionFinal", regionFinal);
 
     setSelectedAddress(fullAddress);
     setSelectedRegion(regionFinal);
@@ -199,11 +250,12 @@ export default function AddressModal({
 
         <ul className="max-h-60 space-y-3 overflow-y-auto">
           {results.map((item, idx) => {
+            // console.log("mapping item : ", item);
             const road = item.road_address?.address_name;
             const building = item.road_address?.building_name;
             const jibun = item.address?.address_name;
             const fullRoad = building ? `${road} (${building})` : road;
-
+            // console.log("fullRoad : ", fullRoad);
             return (
               <li
                 key={idx}
