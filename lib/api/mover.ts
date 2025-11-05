@@ -176,6 +176,7 @@ export async function getMoverList(
 
   const res = await axios.get(ROOT, { params: query });
   const data = res.data;
+  // console.log("api/mover.ts - data : ", data);
 
   if (Array.isArray(data)) {
     return {

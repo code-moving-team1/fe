@@ -21,7 +21,7 @@ type Fav = {
 function toFav(m: Mover): Fav {
   return {
     id: String(m.id), // ← 여기! number -> string
-    name: m.nickname?.trim() || m.name?.trim() || "이사 기사님",
+    name: m.name?.trim() || m.nickname?.trim() || "이사 기사님",
     title: m.introduction?.trim() || m.description?.trim() || "",
     avatarUrl:
       (m.img && m.img.trim?.()) ||
@@ -51,7 +51,7 @@ export default function FavoritesAsideContainer() {
     queryFn: getTopLikedMovers, // GET /mover/likes
     staleTime: 60_000,
   });
-
+  // console.log("찜한기사님목록 data :", data);
   const items: Fav[] = (data ?? []).map(toFav);
 
   return <FavoritesAside items={items} />;

@@ -15,7 +15,7 @@ export default function OAuthSuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("이 useeffect 실행됨?");
+    console.log("Oauth useEffect");
     if (type === "customer") {
       onLoginSuccess("customer", queryClient, setAuth, router);
     } else if (type === "mover") {

@@ -19,6 +19,7 @@ function toNum(v: unknown, fallback = 0) {
 }
 
 function normalize(m: any) {
+  
   const driverName =
     m.name?.length > 10 ? `${m.name.substring(0, 10)}…` : m.name;
 
