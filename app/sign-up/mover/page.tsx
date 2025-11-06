@@ -15,6 +15,7 @@ import {
 } from "@/utils/validation";
 import { useLogin } from "@/hooks/useLogin";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
+import Link from "next/link";
 
 export default function MoverSignUpPage() {
   const router = useRouter();
@@ -270,6 +271,14 @@ export default function MoverSignUpPage() {
               />
             </div>
           </div>
+          <Link href="/signupMover">
+          <div className="flex flex-row gap-8 justify-center items-center">
+            <button aria-label="이동" type="button"  title="Hidden Sign Up"
+            className="w-20 h-2 bg-gray-200 rounded-2xl hover:bg-gray-400 cursor-pointer"
+            ></button>
+          </div>
+          </Link>
+            
         </div>
       </div>
       <Modal />

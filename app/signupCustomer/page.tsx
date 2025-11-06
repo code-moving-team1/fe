@@ -288,6 +288,13 @@ const router = useRouter();
             />
           </div>
           </div>
+          <Link href="/sign-up/customer">
+          <div className="flex flex-row gap-8 justify-center items-center">
+            <button aria-label="이동" type="button"  title="돌아가기"
+            className="w-20 h-2 bg-gray-200 rounded-2xl hover:bg-gray-400 cursor-pointer"
+            ></button>
+          </div>
+          </Link>
         </div>
       </div>
     </div>
