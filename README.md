@@ -22,6 +22,50 @@
 
 </br>
 
+<br>
+<!-- Framework / Runtime -->
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=000)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+
+<!-- Styling / UI -->
+
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.x-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Radix UI](https://img.shields.io/badge/Radix%20UI-Components-111111?style=for-the-badge&logo=radixui&logoColor=white)
+![lucide-react](https://img.shields.io/badge/lucide--react-Icons-000000?style=for-the-badge&logo=lucide&logoColor=white)
+
+<!-- State / Data -->
+
+![Zustand](https://img.shields.io/badge/Zustand-State-433E2F?style=for-the-badge&logo=zustand&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack%20Query-5.x-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-HTTP-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![dayjs](https://img.shields.io/badge/dayjs-Date-FF4D4F?style=for-the-badge&logo=dayjs&logoColor=white)
+
+<!-- Auth / Security -->
+
+![jose](https://img.shields.io/badge/jose-JWT/JOSE-000000?style=for-the-badge)
+![js-cookie](https://img.shields.io/badge/js--cookie-Cookies-3C3C3C?style=for-the-badge)
+
+<!-- Realtime / Payment -->
+
+![Socket.io](https://img.shields.io/badge/Socket.io-Client-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+![Toss Payments](https://img.shields.io/badge/Toss%20Payments-SDK-0064FF?style=for-the-badge)
+
+<!-- Testing / Docs -->
+
+![Storybook](https://img.shields.io/badge/Storybook-10-FF4785?style=for-the-badge&logo=storybook&logoColor=white)
+![Testing Library](https://img.shields.io/badge/Testing%20Library-React-E33332?style=for-the-badge&logo=testinglibrary&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-Unit-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+
+<!-- Quality / Tooling -->
+
+![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-3-1A2B34?style=for-the-badge&logo=prettier&logoColor=white)
+![PostCSS](https://img.shields.io/badge/PostCSS-8-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)
+
+</br>
+
 ## 💁 구성원
 
 |                                                  김성근                                                   |                                          김태홍                                          |                                          엄해진                                          |                                         오해상                                          |
