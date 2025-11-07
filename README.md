@@ -75,7 +75,21 @@
 
 ### [김성근]
 
-- 작업 내용
+- 프론트엔드 초기 세팅
+
+- Storybook 작성 및 배포
+  - 배포 주소 : https://storybook-moving.vercel.app/
+- 공용 컴포넌트
+  - Input
+  - Modal
+  - CardList
+  - Navbar
+- [일반유저]
+  - 이사 견적 요청 페이지
+  - 이사 리뷰 페이지
+- [기사]
+  - 내 견적 관리 조회 페이지
+  - 이사 요청 목록 보기 페이지 초기 UI
 
 ---
 
