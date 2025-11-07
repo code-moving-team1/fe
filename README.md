@@ -191,28 +191,43 @@
 
 ## ⚓️ 프론트엔드 전략
 
-Next.js와 Type script를 기반으로 한 프론트엔드는, 빠르고 안정적이면서도 다양한 기능으로 유저의 사용 편의성을 극대화 시키며 완성도를 높였습니다. Zustand와 React Query를 활용하여 상태 관리 및 데이터 관리를 효율적으로 처리하며, Tailwind CSS와 Styled-Components를 통해 스타일링을 구현합니다. 또한, 실시간 알림과 결제 기능을 통합하여 사용자 경험을 향상시킵니다.
+- **아키텍처 구조**
+  - Next.js 16(App Router) 기반의 Server Component / Client Component 분리 아키텍처 적용.
+  - 서버 액션(Server Action)과 React Query를 조합해 SSR과 CSR을 균형 있게 구성.
 
-- **프레임워크**: Next.js
-- **프로그래밍 언어**: TypeScript
-- **스타일링**: Tailwind CSS, Styled-Components
-- **상태 관리**: Zustand
-- **데이터 관리**: React Query
-- **주요 기능**:
-  - **인증**: 사용자 인증 및 권한 관리
-  - **미들웨어 리다이렉트**: Next.js 미들웨어를 활용한 라우트 보호 및 리다이렉트 구현
-  - **무한 스크롤**: React Query를 활용한 무한 스크롤 구현
-  - **반응형 디자인**: 다양한 디바이스에 대응하는 반응형 UI
-  - **이미지 관리**: Next.js Image 컴포넌트를 활용한 최적화된 이미지 처리
-  - **알림 기능**: 실시간 알림을 통해 사용자에게 중요한 정보를 전달
-  - **결제 기능**: 안전하고 신뢰할 수 있는 결제 시스템 통합
-- **설계 특징**:
-  - **컴포넌트 기반 설계**: 재사용 가능한 컴포넌트 구조
-  - **API 연동**: Axios를 통한 서버와의 통신
-  - **CI/CD**: GitHub Actions를 통한 자동화된 배포 및 테스트
-  - **코드 품질 관리**: Prettier를 통한 코드 스타일 및 품질 유지
-  - **환경 설정**: Vercel을 통한 배포 및 환경 설정
-  - **웹 접근성**: 모든 사용자가 접근할 수 있도록 웹 접근성 고려
+- **데이터 관리**
+  - React Query v5를 통해 서버 상태 관리 및 캐싱, Zustand로 UI/로컬 상태 관리.
+  - Axios 인스턴스를 통해 토큰 주입, 에러 인터셉터, 공통 응답 처리 일원화.
+
+- **UI 시스템**
+  - Radix UI와 Tailwind CSS를 기반으로 접근성 높은 컴포넌트 구성.
+  - Lucide-react 아이콘 세트를 통일적으로 사용해 일관된 디자인 유지.
+
+- **인증/보안**
+  - JWT + jose로 토큰 검증, js-cookie로 클라이언트 쿠키 관리.
+  - 서버 컴포넌트에서 인증 상태 확인 후 권한별 접근 제어 구현.
+
+- **실시간 기능**
+  - Socket.io-client를 활용해 실시간 채팅, 알림, 데이터 업데이트 처리.
+  - React Query 캐시 무효화를 통해 실시간 데이터 반영.
+
+- **결제 시스템**
+  - 토스페이먼츠 SDK를 이용해 클라이언트 측 결제창 호출 및 콜백 처리.
+  - 결제 완료 후 서버 검증 API 호출을 통해 데이터 정합성 유지.
+
+- **시간/날짜 처리**
+  - dayjs를 사용하여 타임존/로캘 기반의 시간 포맷 일관성 확보.
+  - 상대 시각(fromNow)과 절대 시각 병행 지원.
+
+- **테스트/품질 관리**
+  - Storybook으로 UI 컴포넌트 문서화 및 회귀 테스트.
+  - Vitest + Testing Library + Playwright로 유닛, 통합, E2E 테스트 구성.
+  - ESLint 9 + Prettier + Tailwind plugin으로 코드 스타일 및 품질 일원화.
+
+- **성능 최적화**
+  - React Suspense로 스트리밍 렌더링, dynamic import를 통한 코드 분할.
+  - React Query의 prefetch를 활용해 화면 전환 성능 개선.
+  - Next Image 최적화 및 캐싱 전략으로 초기 로드 최소화.
 
 </br>
 
