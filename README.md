@@ -219,13 +219,11 @@
   - dayjs를 사용하여 타임존/로캘 기반의 시간 포맷 일관성 확보.
   - 상대 시각(fromNow)과 절대 시각 병행 지원.
 
-- **테스트/품질 관리**
+- **품질 관리**
   - Storybook으로 UI 컴포넌트 문서화 및 회귀 테스트.
-  - Vitest + Testing Library + Playwright로 유닛, 통합, E2E 테스트 구성.
   - ESLint 9 + Prettier + Tailwind plugin으로 코드 스타일 및 품질 일원화.
 
 - **성능 최적화**
-  - React Suspense로 스트리밍 렌더링, dynamic import를 통한 코드 분할.
   - React Query의 prefetch를 활용해 화면 전환 성능 개선.
   - Next Image 최적화 및 캐싱 전략으로 초기 로드 최소화.
 
@@ -234,7 +232,8 @@
 ## 🍰 프로젝트 회고
 
 - 프론트엔드 결과물: https://fe-real.vercel.app
-- 발표 자료 및 시연 영상 :
+- 발표 자료 : https://www.notion.so/Team-1-Moving-2a302c9248648010ae36ea03ecd05cf5
+- 시연 영상 : https://drive.google.com/drive/folders/1HGIRdddsM1Hnr4bT0uREmh5a6E3XmI0C
 
 </br>
 
@@ -413,3 +412,18 @@
 └── vitest.shims.d.ts
 
 ```
+
+## ⚙️ 환경변수
+
+```
+
+NEXT_PUBLIC_API_BASE_URL = "https://be-production-df89.up.railway.app/api"
+NEXT_PUBLIC_SOCKET_URL="https://be-production-df89.up.railway.app"
+NEXT_PUBLIC_API_BASE_ORIGIN="https://be-production-df89.up.railway.app"
+
+NEXT_PUBLIC_KAKAO_API_KEY=NEXT_PUBLIC_KAKAO_API_KEY
+JWT_SECRET="JWT_SECRET"
+NEXT_PUBLIC_TOSS_CLIENT_KEY="test_ck_NEXT_PUBLIC_TOSS_CLIENT_KEY"
+
+```
+
